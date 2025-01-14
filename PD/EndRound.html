@@ -1,0 +1,16 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+    <h1>Results</h1>
+    <p>Your decision: {{ player.decision }}</p>
+    <p>Your payoff: {{ player.payoff }}</p>
+    {% if player.group.number > player.group.probability %}
+        <p>Dice roll is {{player.group.number }} and this is the LAST round</p>
+    {% else %}
+        <p>Dice roll is {{player.group.number }} and there is going to be a next round</p>
+    {% endif %}
+    <form>
+        <button type="Next">Submit</button>
+    </form>
+{% endblock %}
