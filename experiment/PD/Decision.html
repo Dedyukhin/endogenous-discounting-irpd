@@ -1,0 +1,31 @@
+{% extends "global/Page.html" %}
+{% load otree %}
+
+{% block title %}
+    Round : Make Your Choice
+{% endblock %}
+
+{% block content %}
+    <h3>Choose an action</h3>
+    <p>Decide between <strong>Action 1</strong> and <strong>Action 2</strong>.</p>
+
+    <div class="form-group required">
+        <table class="table table-bordered text-center" style="width: auto; margin: auto">
+            <tr>
+                <th colspan="2"></th>
+                <th colspan="2">The Other Participant</th>
+            </tr>
+            <tr>
+                <th rowspan="2"><span class="rotate90">You</span></th>
+                <td><button name="decision" value="C" class="btn btn-primary btn-large">I choose Action 1</button></td>
+                <td>{{ C.PayoffCC }}, {{ C.PayoffCC }}</td>
+                <td>{{ C.PayoffCD }}, {{ C.PayoffDC }}</td>
+            </tr>
+            <tr>
+                <td><button name="decision" value="D" class="btn btn-primary btn-large">I choose Action 2</button></td>
+                <td>{{ C.PayoffDC }}, {{ C.PayoffCD }}</td>
+                <td>{{ C.PayoffDD }}, {{ C.PayoffDD }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}

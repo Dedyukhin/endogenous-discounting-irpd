@@ -1,0 +1,90 @@
+{{ block styles }}
+<link href="{{ static 'bret/css/custom.css' }}" rel="stylesheet"/>
+{{ endblock }}
+
+
+{{ block title }}
+{{ Lexicon.instructions }}
+{{ endblock }}
+
+{{ block content }}
+
+<div class="instructions">
+{{ if de }}
+        <p>
+            Nachfolgend sehen sie eine {{ C.NUM_ROWS }}x{{ C.NUM_COLS }}-Matrix, die {{ C.NUM_BOXES }} Boxen beinhaltet.
+        </p>
+
+        <p>
+            Sobald Sie die Aufgabe durch Klicken des 'Start' Buttons beginnen, wird eine
+            Box pro Sekunde - beginnend in der oberen linken Ecke - gesammelt. Bereits
+            gesammelte Boxen werden mit einem Häkchen markiert. Für jede gesammelte Box
+            erhalten Sie {{ C.BOX_VALUE }}.
+
+        </p>
+
+        <p>
+            Hinter einer der Boxen ist eine Bombe versteckt, die alles zerstört, was
+    bisher eingesammelt wurde. Die verbleibenden {{ num_nobomb }} Boxen sind
+    jeweils {{ C.BOX_VALUE }} wert. Sie wissen nicht hinter welcher Box die Bombe
+    versteckt ist. Sie wissen nur, dass sich die Bombe in einer beliebigen Box
+    mit gleicher Wahrscheinlichkeit befindet.
+
+        </p>
+        <p>
+            Ihre Aufgabe besteht darin, den Sammelprozess zu beenden. Dies geschieht
+    durch einen Klick auf den Button 'Stop' zu jeder beliebigen Zeit. Wenn Sie
+    die Box einsammeln, in der sich die Bombe befindet, wird die Bombe
+    explodieren und ihre Auszahlung beträgt null. Wenn Sie die Aufgabe beenden
+    ohne die Bombe einzusammeln erhalten Sie den bis dahin gesammelten Betrag.
+
+        </p>
+        <p>
+            Nachdem Sie die Aufgabe mit 'Stop' beendet haben, können die Boxen durch
+    einen Klick auf den Button 'Auflösen' umgedreht werden. Ein Dollarzeichen
+    oder ein Feuersymbol (für die Bombe) wird auf jeder von Ihnen gesammelten
+    Box angezeigt.
+
+    </p>
+{{ else }}
+        <p>
+            In the following, you will see a {{ C.NUM_ROWS }}x{{ C.NUM_COLS }}-matrix containing
+            {{ C.NUM_BOXES }} boxes on your screen.
+        </p>
+
+        {{ if C.RANDOM }}
+        <p>
+            As soon as you start the task by hitting the 'Start' button,
+            one of the boxes is collected per {{ C.TIME_INTERVAL }} second(s) at random.
+            Once collected, the box is marked by a tick symbol.
+            For each box collected you earn {{ C.BOX_VALUE }}.
+        </p>
+        {{ else }}
+        <p>
+            As soon as you start the task by hitting the 'Start' button,
+            one of the boxes is collected per {{ C.TIME_INTERVAL }} second(s), starting from the top-left corner.
+            Once collected, the box is marked by a tick symbol.
+            For each box collected you earn {{ C.BOX_VALUE }}.
+        </p>
+        {{ endif }}
+
+         <p>
+            Behind one of the boxes hides a bomb that destroys everything that has been collected.
+            The remaining {{ num_nobomb }} boxes are worth {{ C.BOX_VALUE }} each.
+            You do not know where the bomb is located.
+            You only know that the bomb can be in any place with equal probability.
+        </p>
+        <p>
+            Your task is to choose when to stop the collecting process. You do so by hitting 'Stop' at any time.
+            If you collect the box where the bomb is located, the bomb will explode and you will earn zero.
+            If you stop before collecting the bomb, you gain the amount accumulated thus far.
+        </p>
+        <p>
+            At the end of the task boxes are toggled by hitting the 'Solve' button.
+            A dollar sign or a fire symbol (for the bomb) will be shown on each of your collected boxes.
+        </p>
+{{ endif }}
+</div>
+
+{{ next_button }}
+{{ endblock }}
