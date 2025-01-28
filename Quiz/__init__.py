@@ -108,7 +108,7 @@ class Instructions_3(Page):
     def is_displayed(self):
         return self.subsession.round_number == 1
 
-class After_quiz(Page):
+class after_quiz(Page):
     def vars_for_template(self):
         continuation_chance = int(round(Constants.StopProbability / 6 * 100))
         return dict(continuation_chance=continuation_chance,
