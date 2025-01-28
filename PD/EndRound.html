@@ -2,15 +2,38 @@
 {% load otree static %}
 
 {% block content %}
-    <h1>Results</h1>
-    <p>Your decision: {{ player.decision }}</p>
-    <p>Your payoff: {{ player.payoff }}</p>
-    {% if player.group.number > player.group.probability %}
-        <p>Dice roll is {{player.group.number }} and this is the LAST round</p>
-    {% else %}
-        <p>Dice roll is {{player.group.number }} and there is going to be a next round</p>
-    {% endif %}
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+    <h2 style="text-align: center; color: #333;">Round Results</h2>
+
+    <div style="margin-bottom: 20px;">
+        <p><strong>Your action:</strong> {{ my_decision }}</p>
+        <p><strong>Partner's action:</strong> {{ other_decision }}</p>
+        <p><strong>Your payoff for this round:</strong> {{ player.payoff }}</p>
+    </div>
+
+    <div style="margin-bottom: 20px; padding: 10px; background-color: #f7f7f7; border-radius: 4px;">
+        <p><strong>Game Continuation Condition:</strong></p>
+        <p>The 6-sided dice roll needs to be at most <strong>{{ player.group.probability }}</strong> for the game to continue.</p>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        {% if player.group.number > player.group.probability %}
+            <p style="color: #d9534f; font-size: 16px;">
+                <strong>6-sided die roll:</strong> {{ player.group.number }}<br>
+                This is the <strong>LAST round</strong>. Next, you will see the match result.
+            </p>
+        {% else %}
+            <p style="color: #5cb85c; font-size: 16px;">
+                <strong>6-sided die roll:</strong> {{ player.group.number }}<br>
+                There is going to be <strong>another round</strong>.
+            </p>
+        {% endif %}
+    </div>
+
     <form>
-        <button type="Next">Submit</button>
+        <button type="submit" style="display: block; width: 100%; padding: 12px; background-color: #0275d8; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">
+            Next
+        </button>
     </form>
+</div>
 {% endblock %}

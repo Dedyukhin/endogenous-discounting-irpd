@@ -1,0 +1,14 @@
+{% extends "global/Page.html" %}
+
+{% block content %}
+<h3>{{ question }}</h3>
+<form method="post">
+    {% for choice in choices %}
+        <label>
+            <input type="radio" name="answer" value="{{ choice }}" required>
+            {{ choice }}
+        </label><br>
+    {% endfor %}
+    <button type="submit" class="otree-btn-next btn btn-primary">Submit</button>
+</form>
+{% endblock %}

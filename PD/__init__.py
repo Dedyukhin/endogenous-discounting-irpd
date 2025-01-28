@@ -11,54 +11,29 @@ doc = """
 class C(BaseConstants):
     NAME_IN_URL = 'irpd'
     PLAYERS_PER_GROUP = 2
-    PayoffCC = cu(4.8) # Or 32 for different treatment
-    PayoffCD = cu(1.2)
-    PayoffDC = cu(5)
-    PayoffDD = cu(2.5)
+    PayoffCC = 48 # Or 32 for different treatment
+    PayoffCD = 12
+    PayoffDC = 50
+    PayoffDD = 25
     StopProbability = 3
     StopProbabilityCC = 4 # or 1/2 for other treatment
 
     time_limit = True
-    time_limit_seconds = 60 # time limit for session (in seconds) since first round of first match (3600 in Dal Bo and Frechette AER 2011)
+    time_limit_seconds = 8*60 # time limit for session (in seconds) since first round of first match (3600 in Dal Bo and Frechette AER 2011)
 
-    num_matches = 10  # set to high number (e.g., 50) if time_limit == True
-    NUM_ROUNDS = num_matches * 20
+    num_matches = 30  # set to high number (e.g., 50) if time_limit == True
+    NUM_ROUNDS = num_matches * 5
 
-def creating_session(self):
-    # Randomly regroup players after each round
-    if self.round_number == 1:
-        self.group_randomly()
-    else:
-        self.group_randomly()
+# def creating_session(self):
+# #   Randomly regroup players after each round
+#     if self.round_number == 1:
+#         new_group_matrix = self.get_group_matrix()
+#
+#     if self.round_number > 1:
+#         self.set_group_matrix(new_group_matrix)
 
 class Subsession(BaseSubsession):
-    def set_groups(self):
-        players = self.get_players()
-        unmatched = players[:]  # Copy list of players
-        group_matrix = []
-
-        while unmatched:
-            player = unmatched.pop(0)  # Take the first unmatched player
-            possible_partners = [
-                p for p in unmatched if str(p.id) not in player.previous_partners.split(",")
-            ]
-            if possible_partners:
-                partner = possible_partners.pop(0)  # Select the first available partner
-                unmatched.remove(partner)
-                group_matrix.append([player, partner])
-
-                # Update the `previous_partners` field for both
-                player.previous_partners += f",{partner.id}"
-                partner.previous_partners += f",{player.id}"
-            else:
-                # If no valid partner found, pair randomly (handle edge cases)
-                partner = unmatched.pop(0)
-                group_matrix.append([player, partner])
-                player.previous_partners += f",{partner.id}"
-                partner.previous_partners += f",{player.id}"
-
-        self.set_group_matrix(group_matrix)
-
+    pass
 
 class Player(BasePlayer):
     decision = models.StringField(
@@ -87,6 +62,7 @@ class Group(BaseGroup):
 
 #############################################################################################
 class Decision(Page):
+
     form_model = 'player'
     form_fields = ['decision', 'comments']
 
@@ -97,18 +73,6 @@ class Decision(Page):
         if player.round_number == 1:
             player.session.vars['start_time'] = time.time()
             player.participant.match_length = []
-
-        if player.round_number > 1:
-            prev_player = player.in_round(player.round_number - 1)
-            player.match = prev_player.match
-            player.round = prev_player.round + 1
-            player.potential_payoff = prev_player.potential_payoff
-
-            if prev_player.terminated:
-                player.participant.match_length.append(prev_player.round)
-                player.round = 1
-                player.match += 1
-                player.potential_payoff = 0
 
 class ResultsWaitPage(WaitPage):
     def after_all_players_arrive(group: Group):
@@ -133,6 +97,7 @@ class ResultsWaitPage(WaitPage):
 
         p1.potential_payoff += p1.payoff
         p2.potential_payoff += p2.payoff
+        group.probability = int(group.probability)
         import random
         group.number = random.randint(1, 6)
 
@@ -141,8 +106,8 @@ class EndRound(Page):
     def vars_for_template(player: Player):
         other_player = player.get_others_in_group()[0]
         return {
-            'my_decision': player.decision,
-            'other_decision': other_player.decision,
+            'my_decision': "1" if player.decision == "C" else "2",
+            'other_decision': "1" if other_player.decision == "C" else "2",
             'payoff': player.payoff,
         }
 
@@ -153,24 +118,62 @@ class EndRound(Page):
         if player.group.number > player.group.probability:
             player.terminated = True
 
+        next_round_player = player.in_round(player.round_number + 1)
+
+        if next_round_player.round_number > 1:
+            next_round_player.match = player.match
+            next_round_player.round = player.round + 1
+            next_round_player.potential_payoff = player.potential_payoff
+
+        if player.terminated:
+            next_round_player.participant.match_length.append(player.round)
+            next_round_player.round = 1
+            next_round_player.match += 1
+            next_round_player.potential_payoff = 0
+
 class EndMatch(Page):
     def is_displayed(player: Player):
         return player.terminated and player.alive
 
     def vars_for_template(player: Player):
-        total_payoff = sum([p.payoff for p in player.in_all_rounds()])
         return {
-            'total_payoff': total_payoff,
+            'total_payoff': player.potential_payoff,
         }
     def before_next_page(player, timeout_happened):
         elapsed_time = time.time() - player.session.vars['start_time']
         if player.match == C.num_matches or (C.time_limit == True and elapsed_time > C.time_limit_seconds):
             player.alive = False
 
-class WaitForOthers(WaitPage):
-    wait_for_all_groups = True  # Ensures synchronization across all groups
-    def after_all_players_arrive(self):
-        pass
+class RematchingWaitPage(WaitPage):
+    wait_for_all_groups = True
+
+    def after_all_players_arrive(subsession: Subsession):
+        # Collect players who need to be rematched
+        players_to_rematch = [p for p in subsession.get_players() if p.terminated]
+        random.shuffle(players_to_rematch)
+        remaining_players = [p for p in subsession.get_players() if not p.terminated]
+
+        # Create new groups
+        new_group_matrix = []
+
+        # Add rematched players to new groups
+        while len(players_to_rematch) >= C.PLAYERS_PER_GROUP:
+            if (players_to_rematch[0].other_player() == players_to_rematch[1]) and (len(players_to_rematch) > C.PLAYERS_PER_GROUP):
+                new_group_matrix.append([players_to_rematch[0], players_to_rematch[2]])
+                players_to_rematch = [players_to_rematch[1]] + players_to_rematch[3:]
+            else:
+                new_group_matrix.append(players_to_rematch[:2])
+                players_to_rematch = players_to_rematch[2:]
+
+        # Keep existing groups for remaining players
+        for group in subsession.get_groups():
+            group_players = group.get_players()
+            if all(not p.terminated for p in group_players):
+                new_group_matrix.append(group_players)
+
+        # Set the new group matrix
+        subsession.in_round(subsession.round_number + 1).set_group_matrix(new_group_matrix)
+
 class End(Page):
     def is_displayed(player: Player):
         return player.alive == False
@@ -196,4 +199,4 @@ class WaitAfterEnd(WaitPage):
 
 page_sequence = [Decision, ResultsWaitPage, EndRound,
                  EndMatch,
-                 WaitForOthers, End, WaitAfterEnd, WaitForOthers]
+                 RematchingWaitPage, End, WaitAfterEnd]

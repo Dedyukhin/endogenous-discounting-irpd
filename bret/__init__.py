@@ -22,7 +22,7 @@ class C(BaseConstants):
     # if the bomb is not collected, player's payoff per round is determined by <box_value> times <boxes_collected>
     # note that the currency of any earnings is determined by the oTree settings in settings.py
     # if you set this to a decimal number, you must set POINTS_DECIMAL_PLACES in settings.py
-    BOX_VALUE = cu(0.1)
+    BOX_VALUE = 1
 
     # number of rows and columns
     # i.e. the total number of boxes is determined by <num_rows> times <num_cols>
@@ -44,7 +44,7 @@ class C(BaseConstants):
     # note that this is only of interest for the case of <num_rounds> larger than 1
     RANDOM_PAYOFF = True
 
-    # if <instructions = True>, a separate template "Instructions.html" is rendered prior to the task in round 1
+    # if <instructions = True>, a separate template "Instructions_1.html" is rendered prior to the task in round 1
     # if <instructions = False>, the task starts immediately (e.g. in case of printed instructions)
     INSTRUCTIONS = True
 
@@ -171,7 +171,7 @@ class Game(Page):
     @staticmethod
     def js_vars(player: Player):
         participant = player.participant
-        reset = participant.vars.pop('reset', False)
+        reset = participant.vars.pop('reset', True)
         if C.DYNAMIC:
             show_input = False
         else:

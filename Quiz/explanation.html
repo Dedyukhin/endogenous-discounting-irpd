@@ -1,0 +1,18 @@
+{% extends "global/Page.html" %}
+
+{% block content %}
+<h3>{{ question }}</h3>
+<p>
+    You answered: <strong>{{ answer }}</strong><br>
+    {% if is_correct %}
+        <span style="color: green;">Correct!</span>
+    {% else %}
+        <span style="color: red;">Incorrect.</span><br>
+        The correct answer is: <strong>{{ correct_answer }}</strong>
+    {% endif %}
+</p>
+<p>{{ explanation }}</p>
+<form method="post">
+    <button class="otree-btn-next btn btn-primary">Next</button>
+</form>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Instructions
+{% endblock %}
+
+{% block content %}
+
+<div class="card card-body bg-light instructions">
+    <div class="big">
+
+<p>This is the end of the quiz.</p>
+<p>Before we start, let me remind you that:
+    <ul>
+        <li> The length of a match is randomly determined. After every round there is a probability that the match will continue for another round.
+            The probability depends on your choice and a choice of the person you are paired with. You will interact with the same person for the entire match.</li>
+        <li> This is how the length of a match is determined: at the end of each round, the computer rolls a fair 6-sided die.
+            <ul>
+                <li> When both you and the person you are matched with chose 1, then if the die comes up 5 or more we do not continue to another round, and the match is over. If the die comes up 4 or less, we continue to another round of the same match.  </li>
+                <li> When action 2 was chosen at least once, then if the die comes up 4 or more we do not continue to another round, and the match is over. If the die comes up 3 or less, we continue to another round of the same match. </li>
+            </ul> </li>
+        <li> Your payoff in each round depend on these choices.</li>
+        <li> Your choice and the choice of the person you are paired with will be shown to both of you at the end of the round </li>
+        <li> After a match is finished, you will be randomly paired with someone for a new match. </li>
+    </ul>
+        </p>
+        <p>Are there any questions before we start with the paid matches?</p>
+            </div>
+</div>
+
+    {% next_button %}
+
+{% endblock %}
+
+{% block styles %}
+    <style type="text/css">
+        .big{
+            font-size: large;
+        }
+        ul li {
+    padding: 5px 0px;
+    }
+    </style>
+{% endblock %}

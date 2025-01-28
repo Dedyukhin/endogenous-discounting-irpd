@@ -1,10 +1,26 @@
 {% extends "global/Page.html" %}
 {% load static %}
 
-{% block content %}
-    <h1>Final Results</h1>
-    <p>SHEEEEEESH</p>
-    <p> The match {{ choosen_match }} was chosen, and your total payment is <p>{{ payment }}</p>
+{% block title %}
+    End of Part 1
+{% endblock %}
 
-    <button class="btn btn-primary btn-large"> Continue </button>
+{% block content %}
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; text-align: center;">
+    <h2 style="color: #333;">End of Part 1</h2>
+
+    <div style="margin-bottom: 20px;">
+        <p style="font-size: 16px;">This is the end of part 1. There is going to be a part 2.</p>
+        <p style="font-size: 18px;">
+            The match <strong>{{ choosen_match }}</strong> was chosen for payment.<br>
+            Your total earnings for this part: <strong>{{ payment }}</strong>
+        </p>
+    </div>
+
+    <form>
+        <button type="submit" style="display: inline-block; padding: 10px 20px; background-color: #0275d8; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">
+            Continue
+        </button>
+    </form>
+</div>
 {% endblock %}

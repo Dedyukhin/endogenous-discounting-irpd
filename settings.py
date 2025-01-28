@@ -3,9 +3,9 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name = 'experiment',
-        app_sequence = ['PD', 'bret', 'Final'],
+        app_sequence = ['Quiz', 'PD', 'bret', 'Final'],
         num_demo_participants = 4,
-        display_name = 'IRPD Game',
+        display_name = 'When Cooperation Drives Continuation',
     ),
 ]
 
@@ -27,11 +27,11 @@ LANGUAGE_CODE = 'en'
 
 # e.g. EUR, GBP, CNY, JPY
 REAL_WORLD_CURRENCY_CODE = 'USD'
-USE_POINTS = False
+USE_POINTS = True
 
 ADMIN_USERNAME = 'admin'
 # for security, best to set admin password in an environment variable
-ADMIN_PASSWORD = 'dedyukhin'
+ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 
 DEMO_PAGE_INTRO_HTML = """ """
 

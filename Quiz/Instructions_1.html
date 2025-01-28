@@ -1,0 +1,41 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Welcome!
+{% endblock %}
+
+{% block content %}
+
+<div class="card card-body bg-light instructions">
+    <div class="big">
+
+        <p>You are about to participate in an experiment on decision-making.
+            What you earn depends partly on your decisions, partly on the decisions of others, and partly on chance.
+            Please turn off cell phones and similar devices now. Please do not talk or in any way try to communicate with other participants.</p>
+
+        <p>We will start with a brief instruction period.
+            If you have any questions during this period, raise your hand and your question will be answered so everyone can hear.</p>
+
+        <p>The entire session will take place through computer terminals, and all interaction between you will take place through the computers.
+            Please do not talk or in any way try to communicate with other participants during the session.</p>
+
+        <p>This experiment has two parts; these instructions are for the first part.
+            Once this part is over, instructions for the next part will be given to you.
+            Your decisions in this part have no influence on the other parts. </p>
+
+        <p>If you have any questions during this period, raise your hand and your question will be answered so everyone can hear.</p>
+
+    </div>
+</div>
+    {% next_button %}
+
+{% endblock %}
+
+{% block styles %}
+    <style type="text/css">
+        .big{
+            font-size: large;
+        }
+    </style>
+{% endblock %}
