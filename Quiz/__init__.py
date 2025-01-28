@@ -51,7 +51,7 @@ class Player(BasePlayer):
 
 from . import *
 
-class Question(Page):
+class question(Page):
     form_model = 'player'
     form_fields = ['answer']
 
@@ -68,7 +68,7 @@ class Question(Page):
         question_data = Constants.questions[player.round_number - 1]
         player.is_correct = player.answer == question_data['correct']
 
-class Explanation(Page):
+class explanation(Page):
     @staticmethod
     def vars_for_template(player: Player):
         question_data = Constants.questions[player.round_number - 1]
@@ -127,4 +127,4 @@ class WaitForOthers(WaitPage):
         # Display only in the first round
         return self.round_number == Constants.num_rounds
 
-page_sequence = [Instructions_1, Instructions_2, Instructions_3, Question, Explanation, After_quiz, WaitForOthers]
+page_sequence = [Instructions_1, Instructions_2, Instructions_3, question, explanation, after_quiz, WaitForOthers]
