@@ -3,7 +3,7 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name = 'Endo_High',
-        app_sequence = ["PD", 'bret', 'Final'],
+        app_sequence = ["Quiz", "PD", 'bret', 'Final'],
         num_demo_participants = 2,
         display_name = 'When Cooperation Drives Continuation',
     ),
