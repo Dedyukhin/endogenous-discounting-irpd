@@ -11,27 +11,76 @@
         <p><strong>Your payoff for this round:</strong> {{ player.payoff }}</p>
     </div>
 
-    <div style="margin-bottom: 20px; padding: 10px; background-color: #f7f7f7; border-radius: 4px;">
+    <table class="table" style="width: 100%; border-collapse: collapse; text-align: center;">
+        <thead>
+            <tr>
+                <th colspan="2"></th>
+                <th colspan="2" style="background-color: #e9ecef;">The Other Participant</th>
+            </tr>
+            <tr>
+                <th colspan="2"></th>
+                <th style="background-color: #f7f7f7;">Action 1</th>
+                <th style="background-color: #f7f7f7;">Action 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th rowspan="2" style="background-color: #e9ecef; padding: 10px;">You</th>
+                <td style="padding: 15px; {% if my_decision == '1' %}background-color: #b3d7ff;{% endif %}">
+                    Action 1
+                </td>
+                <td id="payoff_CC" style="padding: 10px; {% if my_decision == '1' and other_decision == '1' %}background-color: #ffcc00;{% endif %}">
+                    <span class="payoff-num">{{ C.PayoffCC }}</span>, {{ C.PayoffCC }}
+                </td>
+                <td id="payoff_CD" style="padding: 10px; {% if my_decision == '1' and other_decision == '2' %}background-color: #ffcc00;{% endif %}">
+                    <span class="payoff-num">{{ C.PayoffCD }}</span>, {{ C.PayoffDC }}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 15px; {% if my_decision == '2' %}background-color: #b3d7ff;{% endif %}">
+                    Action 2
+                </td>
+                <td id="payoff_DC" style="padding: 10px; {% if my_decision == '2' and other_decision == '1' %}background-color: #ffcc00;{% endif %}">
+                    <span class="payoff-num">{{ C.PayoffDC }}</span>, {{ C.PayoffCD }}
+                </td>
+                <td id="payoff_DD" style="padding: 10px; {% if my_decision == '2' and other_decision == '2' %}background-color: #ffcc00;{% endif %}">
+                    <span class="payoff-num">{{ C.PayoffDD }}</span>, {{ C.PayoffDD }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-bottom: 20px; padding: 10px; background-color: #f7f7f7; border-radius: 4px; text-align: center;">
         <p><strong>Game Continuation Condition:</strong></p>
-        <p>The 6-sided dice roll needs to be at most <strong>{{ player.group.probability }}</strong> for the game to continue.</p>
+        <p>The 6-sided dice roll needs to be at most <strong>{{ player.group.probability  }}</strong> for the game to continue.</p>
+        <button type="button" onclick="revealRoll()" id="revealButton" style="padding: 10px; margin-top: 10px; background-color: #0275d8; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">Reveal Dice Roll</button>
+        <div id="diceRollContainer" style="display: none; margin-top: 10px;">
+            <img id="diceRollImage" src="" alt="Dice Roll" style="width: 100px; height: 100px;">
+            <p id="diceRollResult" style="font-size: 16px; margin-top: 10px;"></p>
+        </div>
     </div>
 
-    <div style="margin-bottom: 20px;">
-        {% if player.group.number > player.group.probability %}
-            <p style="color: #d9534f; font-size: 16px;">
-                <strong>6-sided die roll:</strong> {{ player.group.number }}<br>
-                This is the <strong>LAST round</strong>. Next, you will see the match result.
-            </p>
-        {% else %}
-            <p style="color: #5cb85c; font-size: 16px;">
-                <strong>6-sided die roll:</strong> {{ player.group.number }}<br>
-                There is going to be <strong>another round</strong>.
-            </p>
-        {% endif %}
-    </div>
+    <script>
+        function revealRoll() {
+            var roll = {{ player.group.number }};
+            var probability = {{ player.group.probability }};
+            var resultText = "";
+            if (roll > probability) {
+                resultText = "<span style='color: #d9534f; font-size: 16px;'>This is the <strong>LAST round</strong>. Next, you will see the match result.</span>";
+            } else {
+                resultText = "<span style='color: #5cb85c; font-size: 16px;'>There is going to be <strong>another round</strong>.</span>";
+            }
+            document.getElementById("diceRollImage").src = "/static/images/dice-six-faces-" + roll + ".png";
+            document.getElementById("diceRollResult").innerHTML = resultText;
+            document.getElementById("diceRollContainer").style.display = "block";
+            document.getElementById("nextButton").disabled = false;
+            document.getElementById("nextButton").style.cursor = "pointer";
+            document.getElementById("nextButton").style.backgroundColor = "#0275d8";
+        }
+    </script>
 
     <form>
-        <button type="submit" style="display: block; width: 100%; padding: 12px; background-color: #0275d8; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">
+        <button type="submit" id="nextButton" disabled style="display: block; width: 100%; padding: 12px; background-color: grey; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: not-allowed;">
             Next
         </button>
     </form>

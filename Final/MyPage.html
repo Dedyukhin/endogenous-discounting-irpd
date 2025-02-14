@@ -3,8 +3,23 @@
 {{ endblock }}
 {{ block content }}
 
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; text-align: center;">
+    <h2 style="color: #333;">End of Experiment</h2>
+
+    <div style="margin-bottom: 20px;">
+        <p style="font-size: 16px;">
+            Match {{choosen_match}} was chosen for a payment. Your payment for part 1 is </strong> {{ payment_for_game }}
+        </p>
+        <p style="font-size: 16px;">
+            Your payment for part 2 is </strong> {{ risk_payment}}
+        </p>
+        <p style="font-size: 20px;">
+            Your total payment for this experiment with participation fee is {{EXPERIMENT_PAYMENT}}
+        </p>
+    </div>
+
     {{ formfields }}
-    <p> Your total payment for this experiment is {{player.participant.payoff}} </p>
+    <p>  </p>
     <p> Please remain seated until your name is called </p>
 
 {{ endblock }}

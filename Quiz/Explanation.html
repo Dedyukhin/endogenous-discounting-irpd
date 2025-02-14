@@ -1,0 +1,26 @@
+{% extends "global/Page.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title"> Question {{number}} </h4>
+        </div>
+        <div class="card-body">
+            <p>{{ question }}</p>
+            <p>
+                You answered: <strong>{{ answer }}</strong><br>
+                {% if is_correct %}
+                    <span class="text-success">Correct!</span>
+                {% else %}
+                    <span class="text-danger">Incorrect. Please try again.</span><br>
+                {% endif %}
+            </p>
+            <p>{{ explanation }}</p>
+            <form method="post">
+                <button class="otree-btn-next btn btn-primary">Next</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

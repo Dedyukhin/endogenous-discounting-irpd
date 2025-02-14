@@ -9,11 +9,9 @@
 <div class="card card-body bg-light instructions">
 <p class="big">
 
-    <p> In this experiment, you will be repeatedly matched with a randomly selected person in the room. During each <b>match</b>, you will be asked to make decisions over a sequence of <b>rounds</b>.</p>
+    <p> In this experiment, you will be asked to make decisions in several rounds. You will be randomly paired with another person for a sequence of rounds. Each sequence of rounds is referred to as a match. You will interact with the same person for the entire match.</p>
 
-    <p> The length of a sequence is randomly determined and depends on your choice and the choice of the person you are paired with. </p>
-
-    <p>The points you can obtain in each round of a match depend on your choice and the choice of the person you are paired with. The table below represents all the possible outcomes:</p>
+    <p> The points you can obtain in each round of a match depend on your choice and the choice of the person you are paired with. Each round you and the other person will choose a number (1 or 2) by selecting the corresponding button on the screen. The table below represents all the possible outcomes:</p>
 
     <table class='table table-bordered text-center' style='width: auto; margin: auto'>
         <tr>
@@ -21,49 +19,52 @@
             <th colspan=2>The Other Participant</th>
         </tr>
         <tr>
-            <th>Action 1</th>
-            <th>Action 2</th>
+            <th>Choice 1</th>
+            <th>Choice 2</th>
         </tr>
         <tr>
             <th rowspan=2><span class="rotate90">You</span></th>
-            <th>Action 1</th>
-            <td>{{ Constants.PayoffCC }}, {{ Constants.PayoffCC }}</td>
-            <td>{{ Constants.PayoffDC }}, {{ Constants.PayoffCD }}</td>
+            <th>Choice 1</th>
+            <td> <span style="color: dodgerblue;">{{ Constants.PayoffCC }}</span>, <span style="color: purple;">{{ Constants.PayoffCC }}</span></td>
+            <td><span style="color: dodgerblue;">{{ Constants.PayoffDC }}</span>, <span style="color: purple;">{{ Constants.PayoffCD }}</span></td>
         </tr>
         <tr>
-            <th>Action 2</th>
-            <td>{{ Constants.PayoffCD }}, {{ Constants.PayoffDC }}</td>
-            <td>{{ Constants.PayoffDD }}, {{ Constants.PayoffDD }}</td>
+            <th>Choice 2</th>
+            <td> <span style="color: dodgerblue;">{{ Constants.PayoffCD }}</span>, <span style="color: purple;">{{ Constants.PayoffDC }}</span></td>
+            <td> <span style="color: dodgerblue;">{{ Constants.PayoffDD }}</span>, <span style="color: purple;">{{ Constants.PayoffDD }}</span></td>
         </tr>
     </table>
 
-    <p> The table shows the points associated with each combination of your choice and choice of the person you are paired with.
-        The first entry in each cell represents the points you obtain for that round, while the second entry represents the points obtained by the person you are paired with.</p>
+    <p> The table shows the points associated with each combination of your choice and the choice of the person you are paired with.
+        <span style="color: dodgerblue;"> The first entry in each cell represents the points you obtain for that round </span>,
+        while <span style="color: purple;"> the second entry represents the points obtained by the person you are paired with </span> .</p>
 
+    <p> That is, in each round of a match, if: </p>
     <ul>
-        <li> (1,1): Your choice is 1 and the other’s choice is 1, you each make {{ Constants.PayoffCC }}.</li>
-        <li> (1,2): Your choice is 1 and the other’s choice is 2, you make {{ Constants.PayoffCD }} while the other makes {{ Constants.PayoffDC }}.</li>
-        <li> (2,1): Your choice is 2 and the other’s choice is 1, you make {{ Constants.PayoffDC }} while the other makes {{ Constants.PayoffCD }}.</li>
-        <li> (2,2): Your choice is 2 and the other’s choice is 2, you each make {{ Constants.PayoffDD }}.</li>
+        <li> (1,1): Your choice is <span style="color: dodgerblue;"> 1 </span> and the other’s choice is <span style="color: purple;"> 1 </span>. You earn <span style="color: dodgerblue;">{{ Constants.PayoffCC }}</span>, and the other person earns <span style="color: purple;">{{ Constants.PayoffCC }}</span>.</li>
+        <li> (1,2): Your choice is <span style="color: dodgerblue;"> 1 </span> and the other’s choice is <span style="color: purple;"> 2 </span>. You earn <span style="color: dodgerblue;">{{ Constants.PayoffCD }}</span>, and the other person earns <span style="color: purple;">{{ Constants.PayoffDC }}</span>.</li>
+        <li> (2,1): Your choice is <span style="color: dodgerblue;"> 2 </span> and the other’s choice is <span style="color: purple;"> 1 </span>. You earn <span style="color: dodgerblue;">{{ Constants.PayoffDC }}</span>, and the other person earns <span style="color: purple;">{{ Constants.PayoffCD }}</span>.</li>
+        <li> (2,2): Your choice is <span style="color: dodgerblue;"> 2 </span> and the other’s choice is <span style="color: purple;"> 2 </span>. You earn <span style="color: dodgerblue;">{{ Constants.PayoffDD }}</span>, and the other person earns <span style="color: purple;">{{ Constants.PayoffDD }}</span>.</li>
     </ul>
 
-    <p>At the end of each round, you will see your choice (1 or 2) and the choice of the person you were paired with (1 or 2).</p>
+    <p> After each round, you will be reminded of your choice, and you will be shown the choice of the person you were paired with. </p>
 
-    <p> At the end of the round, there is a probability that the match will continue for at least another round. The probability will depend on your choice and the choice of the person you are paired with.  </p>
+    <p> At the end of each round, there is a probability that the match will continue for at least another round. The probability will depend on your choice and the choice of the person you are paired with. The computer will roll a 6-sided die in every round to decide whether the match will continue for at least another round: </p>
     <ul>
-        <li> There is 67% chance that the match will continue for at least another round if you and the person you are paired with both choose action 1.
-            This is as if we would roll a 6-sided dice and continue if number is equal to 1, 2, 3, or 4. </li>
-        <li> There is 50% chance that the match will continue for at least another round if action 2 was chosen at least once.
-            This is as if we would roll a 6-sided dice and continue if number is equal or lower than 1, 2, or 3.</li>
+        <li> <strong> If your choice in the previous round was 1 and the other person's choice was also 1 </strong>, the match will continue for an additional round if the die lands on a 1, 2, 3, or 4. The match will end if the die lands on a 5 or 6. </li>
+        <li> <strong>  If at least on of you chose 2 </strong>, the match will continue for an additional round if the die lands on a 1, 2, or 3. The match will end if the die lands on a 4, 5, or 6.</li>
     </ul>
-    <p> Remember, if you are in round 2, the probability there will be a third round is as it would in round 9. </p>
+    <p> The figure below shows the chances that the match will continue for at least another round: </p>
 
-    <p> Once a match ends, you will be paired randomly with someone for a new match. You will not be able to identify who you've interacted with in previous or future matches. </p>
+    <img src="{% static 'images/endo_dice.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
 
-    <p> Each part of the experiment will generate points that count towards your final payoff. In this part, one match will be randomly selected to count towards your final payoff.
-        You will receive an additional $5 show-up fee for your participation. You will only be informed of your payoffs at the end of the experiment. </p>
+    <p> Remember, if you are in round 2, the probability that there will be a third round is the same as the probability that there will be a tenth round if you are in round 9. </p>
 
-    <p> This part will last for 45 minutes. </p>
+    <p> Once a match ends, you will be randomly paired with someone for a new match. You will not be able to identify who you have interacted with in previous or future matches. </p>
+
+    <p> Each part of the experiment will generate points that count towards your final payoff. In this part, one match will be randomly selected to count towards your final payoff. </p>
+
+    <p> Points earned in this match will be converted to dollars at a rate of 10 points per dollar. You will receive an additional \$5 show-up fee for your participation. You will only be informed of your payoffs at the end of the experiment. </p>
 
     {% next_button %}
 

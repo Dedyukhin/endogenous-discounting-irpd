@@ -2,9 +2,9 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name = 'experiment',
-        app_sequence = ['PD', 'bret', 'Final'],
-        num_demo_participants = 4,
+        name = 'Endo_High',
+        app_sequence = ["PD", 'bret', 'Final'],
+        num_demo_participants = 2,
         display_name = 'When Cooperation Drives Continuation',
     ),
 ]
@@ -18,7 +18,7 @@ SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=0.10, participation_fee=5.00, doc=""
 )
 
-PARTICIPANT_FIELDS = ['payment_match', 'match_length']
+PARTICIPANT_FIELDS = ['payment_match', 'match_length', 'game_payment', 'bret_payoff']
 SESSION_FIELDS = []
 
 # ISO-639 code

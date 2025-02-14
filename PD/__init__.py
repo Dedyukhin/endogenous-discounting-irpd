@@ -11,7 +11,7 @@ doc = """
 class C(BaseConstants):
     NAME_IN_URL = 'irpd'
     PLAYERS_PER_GROUP = 2
-    PayoffCC = 48 # Or 32 for different treatment
+    PayoffCC = 32 # Or 48 for different treatment
     PayoffCD = 12
     PayoffDC = 50
     PayoffDD = 25
@@ -19,7 +19,7 @@ class C(BaseConstants):
     StopProbabilityCC = 4 # or 1/2 for other treatment
 
     time_limit = True
-    time_limit_seconds = 8*60 # time limit for session (in seconds) since first round of first match (3600 in Dal Bo and Frechette AER 2011)
+    time_limit_seconds = 1*60 # time limit for session (in seconds) since first round of first match (3600 in Dal Bo and Frechette AER 2011)
 
     num_matches = 30  # set to high number (e.g., 50) if time_limit == True
     NUM_ROUNDS = num_matches * 5
@@ -54,11 +54,9 @@ class Player(BasePlayer):
     def other_player(self):
         return self.get_others_in_group()[0]
 
-    previous_partners = models.LongStringField(initial="")  # To store partner IDs as a strin
-
 class Group(BaseGroup):
     number = models.IntegerField()
-    probability = models.FloatField()
+    probability = models.IntegerField()
 
 #############################################################################################
 class Decision(Page):
@@ -106,8 +104,8 @@ class EndRound(Page):
     def vars_for_template(player: Player):
         other_player = player.get_others_in_group()[0]
         return {
-            'my_decision': "1" if player.decision == "C" else "2",
-            'other_decision': "1" if other_player.decision == "C" else "2",
+            'my_decision': "1" if player.decision == 'C' else "2",
+            'other_decision': "1" if other_player.decision == 'C' else "2",
             'payoff': player.payoff,
         }
 
@@ -184,19 +182,17 @@ class End(Page):
         m = player.participant.payment_match
         l = player.participant.match_length
 
+        player.participant.game_payment = player.in_round(sum(l[:m])).potential_payoff
         player.participant.payoff = player.in_round(sum(l[:m])).potential_payoff
         return {
             'payment': player.participant.payoff,
             'choosen_match': player.participant.payment_match,
         }
 
-class WaitAfterEnd(WaitPage):
-    def is_displayed(player: Player):
-        return player.alive == False
-
     def app_after_this_page(player, upcoming_apps):
         return 'bret'
 
+
 page_sequence = [Decision, ResultsWaitPage, EndRound,
                  EndMatch,
-                 RematchingWaitPage, End, WaitAfterEnd]
+                 RematchingWaitPage, End]

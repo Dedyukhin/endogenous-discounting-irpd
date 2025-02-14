@@ -206,7 +206,7 @@ class Results(Page):
     def vars_for_template(player: Player):
         participant = player.participant
         total_payoff = sum([p.payoff for p in player.in_all_rounds()])
-        participant.vars['bret_payoff'] = total_payoff
+        player.participant.bret_payoff = total_payoff
         return dict(
             player_in_all_rounds=player.in_all_rounds(),
             box_value=C.BOX_VALUE,
@@ -222,5 +222,7 @@ class Results(Page):
             **which_language,
         )
 
+class Wait(WaitPage):
+    Wait_for_all_groups = True
 
-page_sequence = [Instructions, Game, Results]
+page_sequence = [Instructions, Wait, Game, Results]

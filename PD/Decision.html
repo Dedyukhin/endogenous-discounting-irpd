@@ -7,8 +7,8 @@
 
 {% block content %}
 <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
-    <h3 style="text-align: center; color: #333;">Choose an Action</h3>
-    <p style="text-align: center; font-size: 16px;">Decide between <strong>Action 1</strong> and <strong>Action 2</strong>.</p>
+    <h3 style="text-align: center; color: #333;">Choose</h3>
+    <p style="text-align: center; font-size: 16px;">Decide between <strong> 1</strong> and <strong> 2</strong>.</p>
 
     <div style="overflow-x: auto; margin-top: 20px;">
         <table class="table" style="width: 100%; border-collapse: collapse; text-align: center;">
@@ -19,32 +19,111 @@
                 </tr>
                 <tr>
                     <th colspan="2"></th>
-                    <th style="background-color: #f7f7f7;">Action 1</th>
-                    <th style="background-color: #f7f7f7;">Action 2</th>
+                    <th style="background-color: #f7f7f7;"> Choice 1</th>
+                    <th style="background-color: #f7f7f7;"> Choice 2</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <th rowspan="2" style="background-color: #e9ecef; padding: 10px; writing-mode: vertical-rl; transform: rotate(180deg);">You</th>
+                    <th rowspan="2" style="background-color: #e9ecef; padding: 10px;">You</th>
                     <td style="padding: 15px;">
-                        <button name="decision" value="C" style="padding: 10px 20px; background-color: #0275d8; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
-                            I choose Action 1
+                        <button type="button" onclick="selectChoice('C')" style="padding: 10px 20px; background-color: #0275d8; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
+                            I choose 1
                         </button>
                     </td>
-                    <td style="padding: 10px;">{{ C.PayoffCC }}, {{ C.PayoffCC }}</td>
-                    <td style="padding: 10px;">{{ C.PayoffCD }}, {{ C.PayoffDC }}</td>
+                    <td id="payoff_CC" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffCC }}</span>, {{ C.PayoffCC }}</td>
+                    <td id="payoff_CD" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffCD }}</span>, {{ C.PayoffDC }}</td>
                 </tr>
                 <tr>
                     <td style="padding: 15px;">
-                        <button name="decision" value="D" style="padding: 10px 20px; background-color: #0275d8; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
-                            I choose Action 2
+                        <button type="button" onclick="selectChoice('D')" style="padding: 10px 20px; background-color: #0275d8; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
+                            I choose 2
                         </button>
                     </td>
-                    <td style="padding: 10px;">{{ C.PayoffDC }}, {{ C.PayoffCD }}</td>
-                    <td style="padding: 10px;">{{ C.PayoffDD }}, {{ C.PayoffDD }}</td>
+                    <td id="payoff_DC" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffDC }}</span>, {{ C.PayoffCD }}</td>
+                    <td id="payoff_DD" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffDD }}</span>, {{ C.PayoffDD }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <p id="selectedChoice" style="font-size: 16px; font-weight: bold; color: blue;">No choice selected</p>
+        <button id="confirmButton" type="submit" onclick="confirmChoice()" disabled
+            style="padding: 10px 20px; background-color: #5cb85c; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: not-allowed;">
+            Confirm Choice
+        </button>
+    </div>
 </div>
+
+<p> </p>
+
+<div class="card card-body bg-light instructions" >
+    <div class="big">
+
+<p> <strong> Summary of instructions</strong>:
+    <ul>
+        <li> You will be randomly paired with another person for a match. You will interact with the same person for the entire match. </li>
+
+        <li> After each round, the computer will roll a fair 6-sided die to determine whether the match will continue for at least another round: </li>
+        <img src="{% static 'images/endo_dice.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
+
+        <li> Your choice and the choice of the person you are paired with will be shown to both of you at the end of each round. </li>
+
+        <li> Your payoff in each round depends on these choices. </li>
+
+        <li> After a match is finished, you will be randomly paired with someone for a new match.  </li>
+    </ul>
+        </p>
+            </div>
+</div>
+
+
+<form id="decisionForm" method="post">
+    <input type="hidden" name="decision" id="decisionInput">
+</form>
+
+<style>
+    .payoff-num {
+        color: blue;
+        font-weight: bold;
+    }
+</style>
+
+<script>
+    let selectedOption = "";
+
+    function selectChoice(choice) {
+        selectedOption = choice;
+        document.getElementById("decisionInput").value = choice;
+
+        // Reset previous selections
+        document.getElementById('payoff_CC').style.backgroundColor = "";
+        document.getElementById('payoff_CD').style.backgroundColor = "";
+        document.getElementById('payoff_DC').style.backgroundColor = "";
+        document.getElementById('payoff_DD').style.backgroundColor = "";
+
+        if (choice === 'C') {
+            document.getElementById('payoff_CC').style.backgroundColor = "Lavender";
+            document.getElementById('payoff_CD').style.backgroundColor = "Lavender";
+            document.getElementById("selectedChoice").textContent = "You selected: 1";
+        } else {
+            document.getElementById('payoff_DC').style.backgroundColor = "Lavender";
+            document.getElementById('payoff_DD').style.backgroundColor = "Lavender";
+            document.getElementById("selectedChoice").textContent = "You selected: 2";
+        }
+
+        // Enable confirm button
+        document.getElementById("confirmButton").disabled = false;
+        document.getElementById("confirmButton").style.cursor = "pointer";
+        document.getElementById("confirmButton").style.backgroundColor = "#4CAF50";
+    }
+
+    function confirmChoice() {
+        if (selectedOption !== "") {
+            document.getElementById("decisionForm").submit();
+        }
+    }
+</script>
+
 {% endblock %}

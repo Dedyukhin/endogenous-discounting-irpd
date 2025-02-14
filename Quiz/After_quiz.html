@@ -1,0 +1,65 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Instructions
+{% endblock %}
+
+{% block content %}
+
+<div class="card card-body bg-light instructions">
+    <div class="big">
+
+<p>This is the end of the quiz.</p>
+<p>Before we start, let me remind you that:
+    <ul>
+        <li> You will be randomly paired with another person for a match. You will interact with the same person for the entire match. </li>
+
+        <li> After each round, the computer will roll a fair 6-sided die to determine whether the match will continue for at least another round: </li>
+        <img src="{% static 'images/endo_dice.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
+
+        <li> Your choice and the choice of the person you are paired with will be shown to both of you at the end of each round. </li>
+
+        <li> Your payoff in each round depends on these choices. </li>
+
+        <table class='table table-bordered text-center' style='width: auto; margin: auto'>
+        <tr>
+            <th colspan=2 rowspan=2></th>
+            <th colspan=2>The Other Participant</th>
+        </tr>
+        <tr>
+            <th>Choice 1</th>
+            <th>Choice 2</th>
+        </tr>
+        <tr>
+            <th rowspan=2><span class="rotate90">You</span></th>
+            <th>Choice 1</th>
+            <td> <span style="color: dodgerblue;">{{ Constants.PayoffCC }}</span>, <span style="color: purple;">{{ Constants.PayoffCC }}</span></td>
+            <td><span style="color: dodgerblue;">{{ Constants.PayoffDC }}</span>, <span style="color: purple;">{{ Constants.PayoffCD }}</span></td>
+        </tr>
+        <tr>
+            <th>Choice 2</th>
+            <td> <span style="color: dodgerblue;">{{ Constants.PayoffCD }}</span>, <span style="color: purple;">{{ Constants.PayoffDC }}</span></td>
+            <td> <span style="color: dodgerblue;">{{ Constants.PayoffDD }}</span>, <span style="color: purple;">{{ Constants.PayoffDD }}</span></td>
+        </tr>
+    </table>
+
+        <li> After a match is finished, you will be randomly paired with someone for a new match.  </li>
+    </ul>
+        </p>
+        <p>Are there any questions before we start with the paid matches?</p>
+            </div>
+</div>
+
+{% endblock %}
+
+{% block styles %}
+    <style type="text/css">
+        .big{
+            font-size: large;
+        }
+        ul li {
+    padding: 5px 0px;
+    }
+    </style>
+{% endblock %}
