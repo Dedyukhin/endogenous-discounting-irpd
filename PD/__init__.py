@@ -19,7 +19,7 @@ class C(BaseConstants):
     StopProbabilityCC = 4 # or 1/2 for other treatment
 
     time_limit = True
-    time_limit_seconds = 1*60 # time limit for session (in seconds) since first round of first match (3600 in Dal Bo and Frechette AER 2011)
+    time_limit_seconds = 10*60 # time limit for session (in seconds) since first round of first match (3600 in Dal Bo and Frechette AER 2011)
 
     num_matches = 30  # set to high number (e.g., 50) if time_limit == True
     NUM_ROUNDS = num_matches * 5
