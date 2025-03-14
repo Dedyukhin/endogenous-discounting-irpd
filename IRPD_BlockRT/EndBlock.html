@@ -1,0 +1,64 @@
+{% extends "global/Page.html" %}
+{% load static %}
+
+{% block title %}
+    End of Block
+{% endblock %}
+
+{% block content %}
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; text-align: center;">
+
+    {{ if Ended }}
+    <h3 style="color: #333;">The match has ended</h3>
+    <div style="margin-bottom: 20px;">
+
+        <p style="font-size: 20px;"> The game has ended for all pairs</p>
+
+        <p style="font-size: 20px;"> Your match has terminated in <strong> round {{ round_terminated }} </strong> </p>
+
+        <div style="overflow-x: auto; margin-top: 10px;">
+        <table style="width: 70%; border-collapse: collapse; text-align: center; margin: 0 auto;">
+            <thead>
+                <tr style="background-color: #e9ecef;">
+                    <th style="width: 25%; padding: 6px; border: 1px solid #ddd;">Round</th>
+                    <th style="width: 25%; padding: 6px; border: 1px solid #ddd;">My Choice</th>
+                    <th style="width: 25%; padding: 6px; border: 1px solid #ddd;">Other's Choice</th>
+                    <th style="width: 25%; padding: 6px; border: 1px solid #ddd;">Die roll</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for node in history %}
+                    <tr style="background-color: #ffffff;">
+                        <td style="padding: 6px; border: 1px solid #ddd;">{{ node.round }}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">{{ node.my_choice }}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">{{ node.other_choice }}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;"><img src="{% static node.die %}" style="max-width: 60px; height: auto; opacity: 0.8;"> </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+        <p> </p>
+
+        <p style="font-size: 20px;"><strong>Your total payoff for the match:</strong> {{ total_payoff }}</p>
+
+        <p style="font-size: 20px;"> Now you will be rematched </p>
+    </div>
+
+    {{ else }}
+    <h3 style="color: #333;">The match has not ended for at least one pair</h3>
+    <div style="margin-bottom: 20px;">
+        <p style="font-size: 18px;">You will play an additional block in the <strong> same pair </strong> </p>
+    </div>
+    {{ endif }}
+
+    <form>
+        <button type="submit" style="display: inline-block; padding: 10px 20px; background-color: #0275d8; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">
+            Continue
+        </button>
+    </form>
+</div>
+{% endblock %}

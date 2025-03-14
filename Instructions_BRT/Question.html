@@ -1,0 +1,59 @@
+{% extends "global/Page.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title"> Question {{number}} </h4>
+        </div>
+        <div class="card-body">
+            <p>{{ question }}</p>
+            <form method="post">
+                {% for choice in choices %}
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="answer" id="choice{{ forloop.counter }}" value="{{ choice }}" required>
+                        <label class="form-check-label" for="choice{{ forloop.counter }}">
+                            {{ choice }}
+                        </label>
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </form>
+        </div>
+    </div>
+
+                <p> Payoffs for each combination of choices: </p>
+
+            <table class='table table-bordered text-center' style='width: auto; margin: auto'>
+                <tr>
+                    <th colspan=2 rowspan=2></th>
+                    <th colspan=2>The Other Participant</th>
+                </tr>
+                <tr>
+                    <th>Choice 1</th>
+                    <th>Choice 2</th>
+                </tr>
+                <tr>
+                    <th rowspan=2><span class="rotate90">You</span></th>
+                    <th>Choice 1</th>
+                    <td> <span style="color: dodgerblue;">{{ Constants.PayoffCC }}</span>, <span style="color: purple;">{{ Constants.PayoffCC }}</span></td>
+                    <td><span style="color: dodgerblue;">{{ Constants.PayoffCD }}</span>, <span style="color: purple;">{{ Constants.PayoffDC }}</span></td>
+                </tr>
+                <tr>
+                    <th>Choice 2</th>
+                    <td> <span style="color: dodgerblue;">{{ Constants.PayoffDC }}</span>, <span style="color: purple;">{{ Constants.PayoffCD }}</span></td>
+                    <td> <span style="color: dodgerblue;">{{ Constants.PayoffDD }}</span>, <span style="color: purple;">{{ Constants.PayoffDD }}</span></td>
+                </tr>
+            </table>
+
+            <p> Rule for determining if match continues: </p>
+            <ul>
+                <li> If your choice in the previous round was 1 and the other person's choice was also 1: </li>
+                <img src="{% static 'images/dices_4.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
+                <li> If at least one of you chose 2:</li>
+                <img src="{% static 'images/dices_3.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
+            </ul>
+
+
+</div>
+{% endblock %}

@@ -40,7 +40,7 @@ class C(BaseConstants):
 
     # determines whether all rounds played are payed-off or whether one round is randomly chosen for payment
     # if <random_payoff = True>, one round is randomly determined for payment
-    # if <random_payoff = False>, the final payoff of the task is the sum of all rounds played
+    # if <random_payoff = False>, the final payoff of the task is the last round played
     # note that this is only of interest for the case of <num_rounds> larger than 1
     RANDOM_PAYOFF = True
 
@@ -71,7 +71,7 @@ class C(BaseConstants):
 
     # time interval between single boxes being collected (in seconds)
     # note that this only affects game play if <dynamic = True>
-    TIME_INTERVAL = 0.50
+    TIME_INTERVAL = 2
 
     # collect boxes randomly or systematically
     # if <random = False>, boxes are collected row-wise one-by-one, starting in the top-left corner
@@ -132,7 +132,7 @@ def set_payoff(player: Player):
     else:
         player.round_result = player.boxes_collected * C.BOX_VALUE
     if round_number == 1:
-        participant.vars['round_to_pay'] = random.randint(1, C.NUM_ROUNDS)
+        participant.vars['round_to_pay'] = C.NUM_ROUNDS # Corrected here such that last round is paid
     if C.RANDOM_PAYOFF:
         if round_number == participant.vars['round_to_pay']:
             player.pay_this_round = True
@@ -205,8 +205,11 @@ class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         participant = player.participant
-        total_payoff = sum([p.payoff for p in player.in_all_rounds()])
-        player.participant.bret_payoff = total_payoff
+        # total_payoff = sum([p.payoff for p in player.in_all_rounds()])
+        if player.round_number == C.NUM_ROUNDS:
+            total_payoff = player.payoff
+            player.participant.bret_payoff = total_payoff
+            player.participant.payoff += player.participant.bret_payoff
         return dict(
             player_in_all_rounds=player.in_all_rounds(),
             box_value=C.BOX_VALUE,
@@ -222,7 +225,25 @@ class Results(Page):
             **which_language,
         )
 
+class PracticeRound(Page):
+    def is_displayed(player: Player):
+        return C.RESULTS and player.round_number != C.NUM_ROUNDS
+
+    def vars_for_template(player: Player):
+        return dict(
+            player_in_all_rounds=player.in_all_rounds(),
+            box_value=C.BOX_VALUE,
+            boxes_collected=player.boxes_collected,
+            bomb=player.bomb,
+            bomb_row=player.bomb_row,
+            bomb_col=player.bomb_col,
+            round_result=player.round_result,
+            payoff=player.payoff,
+            Lexicon=Lexicon,
+            **which_language,
+        )
+
 class Wait(WaitPage):
     Wait_for_all_groups = True
 
-page_sequence = [Instructions, Wait, Game, Results]
+page_sequence = [Instructions, Wait, Game, PracticeRound, Results]

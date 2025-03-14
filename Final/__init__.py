@@ -21,7 +21,34 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    pass
+    age = models.IntegerField(label="What is your age?", min=18, max=100)
+    gender = models.StringField(
+        choices=[("Male", "Male"), ("Female", "Female"), ("Other", "Other"),
+                 ("Prefer not to say", "Prefer not to say")],
+        label="What is your gender?",
+        widget=widgets.RadioSelect,
+    )
+    STEM = models.StringField(
+        choices=[
+            ("Yes", "Yes"),
+            ("No", "No"),
+            ("Prefer not to say", "Prefer not to say")
+        ],
+        label="Are you a STEM major?",
+        widget=widgets.RadioSelect,
+    )
+    Economics = models.StringField(
+        choices=[
+            ("Yes", "Yes"),
+            ("No", "No"),
+            ("Prefer not to say", "Prefer not to say")
+        ],
+        label="Have you ever had an Economics class?",
+        widget=widgets.RadioSelect,
+    )
+    comments = models.LongStringField(
+        blank=True, label="Please feel free to provie reasoning of your choices in the experiment"
+    )
 
 
 # PAGES
@@ -39,8 +66,9 @@ class ResultsWaitPage(WaitPage):
     pass
 
 
-class Results(Page):
-    pass
+class Demographics(Page):
+    form_model = "player"
+    form_fields = ["age", "gender", "STEM", "Economics", "comments"]
+        # age, gender, STEM major, Economic, Reasoning your actions
 
-
-page_sequence = [MyPage]
+page_sequence = [Demographics, MyPage]

@@ -38,27 +38,27 @@
         </div>
     </div>
 
-    <div class="card card-info">
-    {{ if C.RANDOM_PAYOFF }}
-        {{ if de }}
-            Für Ihre Auszahlung wurde Runde Nr. {{ round_to_pay }} zufällig ausgewählt.<br/>
-            Entsprechend beträgt ihre Auszahlung aus dieser Aufgabe {{ total_payoff }}.
-        {{ else }}
-            For your payment, round number {{ round_to_pay }} was randomly chosen. <br/>
-            Thus, your final payoff in this task amounts to {{ total_payoff }}.
-        {{ endif }}
-    {{ else }}
-        {{ if de }}
-            Ihre Auszahlung wird durch die Summe aller gesammelten Beträge in allen
-            Runden bestimmt. Dementsprechend beträgt Ihre Auszahlung aus dieser Aufgabe {{ total_payoff }}.
-        {{ else }}
-            Your final payoff is determined by the sum of all payoffs per round
-            such that your final payoff in this task amounts to {{ total_payoff }}.
-        {{ endif }}
-    {{ endif }}
-    </div>
+<!--    <div class="card card-info">-->
+<!--    {{ if C.RANDOM_PAYOFF }}-->
+<!--        {{ if de }}-->
+<!--            Für Ihre Auszahlung wurde Runde Nr. {{ round_to_pay }} zufällig ausgewählt.<br/>-->
+<!--            Entsprechend beträgt ihre Auszahlung aus dieser Aufgabe {{ total_payoff }}.-->
+<!--        {{ else }}-->
+<!--            For your payment, round number {{ round_to_pay }} was randomly chosen. <br/>-->
+<!--            Thus, your final payoff in this task amounts to {{ total_payoff }}.-->
+<!--        {{ endif }}-->
+<!--    {{ else }}-->
+<!--        {{ if de }}-->
+<!--            Ihre Auszahlung wird durch die Summe aller gesammelten Beträge in allen-->
+<!--            Runden bestimmt. Dementsprechend beträgt Ihre Auszahlung aus dieser Aufgabe {{ total_payoff }}.-->
+<!--        {{ else }}-->
+<!--            Your final payoff is determined by the sum of all payoffs per round-->
+<!--            such that your final payoff in this task amounts to {{ total_payoff }}.-->
+<!--        {{ endif }}-->
+<!--    {{ endif }}-->
+<!--    </div>-->
 
-<form method="post">
-    <button type="submit" class="btn btn-primary">Continue</button>
-</form>
+<!--<form method="post">-->
+<!--    <button type="submit" class="btn btn-primary">Continue</button>-->
+<!--</form>-->
 

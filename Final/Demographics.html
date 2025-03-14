@@ -1,0 +1,15 @@
+{% extends "global/Page.html" %}
+{% load otree %}
+
+{% block title %}
+    Demographics Questionnaire
+{% endblock %}
+
+{% block content %}
+    <h3>Please provide the following demographic details:</h3>
+
+    {{ formfields }}
+
+        <button type="submit" class="btn btn-primary">Next</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends "global/Page.html" %}
+{% load otree %}
+
+{% block title %}
+    Round {{ player.round }}
+{% endblock %}
+
+{% block content %}
+<div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+    <h3 style="text-align: center; color: #333;">Choose between <strong> 1</strong> and <strong> 2</strong></h3>
+
+    <div style="overflow-x: auto; margin-top: 20px;">
+        <table class="table" style="width: 100%; border-collapse: collapse; text-align: center;">
+            <thead>
+                <tr>
+                    <th colspan="2"></th>
+                    <th colspan="2" style="background-color: #e9ecef;">The Other Participant</th>
+                </tr>
+                <tr>
+                    <th colspan="2"></th>
+                    <th style="background-color: #f7f7f7;"> Choice 1</th>
+                    <th style="background-color: #f7f7f7;"> Choice 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th rowspan="2" style="background-color: #e9ecef; padding: 10px;">You</th>
+                    <td style="padding: 15px;">
+                        <button type="button" onclick="selectChoice('C')" style="padding: 10px 20px; background-color: #0275d8; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
+                            Choice 1
+                        </button>
+                    </td>
+                    <td id="payoff_CC" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffCC }}</span>, {{ C.PayoffCC }}</td>
+                    <td id="payoff_CD" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffCD }}</span>, {{ C.PayoffDC }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 15px;">
+                        <button type="button" onclick="selectChoice('D')" style="padding: 10px 20px; background-color: #0275d8; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
+                            Choice 2
+                        </button>
+                    </td>
+                    <td id="payoff_DC" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffDC }}</span>, {{ C.PayoffCD }}</td>
+                    <td id="payoff_DD" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffDD }}</span>, {{ C.PayoffDD }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <p id="selectedChoice" style="font-size: 16px; font-weight: bold; color: blue;">No choice selected</p>
+        <button id="confirmButton" type="submit" onclick="confirmChoice()" disabled
+            style="padding: 10px 20px; background-color: #5cb85c; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: not-allowed;">
+            Confirm Choice
+        </button>
+    </div>
+
+    <p style="text-align: center; font-size: 16px; margin-top: 30px;">History of the match:</p>
+    <div style="overflow-x: auto; margin-top: 10px;">
+        <table style="width: 40%; border-collapse: collapse; text-align: center; margin: 0 auto;">
+            <thead>
+                <tr style="background-color: #e9ecef;">
+                    <th style="width: 33.33%; padding: 6px; border: 1px solid #ddd;">Round</th>
+                    <th style="width: 33.33%; padding: 6px; border: 1px solid #ddd;">My Choice</th>
+                    <th style="width: 33.33%; padding: 6px; border: 1px solid #ddd;">Other's Choice</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for node in history %}
+                    <tr style="background-color: #ffffff;">
+                        <td style="padding: 6px; border: 1px solid #ddd;">{{ node.round }}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">{{ node.my_choice }}</td>
+                        <td style="padding: 6px; border: 1px solid #ddd;">{{ node.other_choice }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<p> </p>
+
+<div class="card card-body bg-light instructions" >
+    <div class="big">
+
+<p> <strong> Summary of instructions</strong>:
+    <ul>
+        <li> You will be randomly paired with another person for a match. You will interact with the same person for the entire match. </li>
+
+        <li> Your choice and the choice of the person you are paired with will be shown to both of you at the end of each round. </li>
+
+        {{ if Endogenous }}
+        <li>At the end of each round, the match may continue based on your choices and a 6-sided die roll:</li>
+            <ul>
+                <li>Both choose 1: Continues if the die shows 1, 2, 3, or 4; ends if it shows 5 or 6.</li>
+                <img src="{% static 'images/dices_4.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
+                <li>At least one chooses 2: Continues if the die shows 1, 2, or 3; ends if it shows 4, 5, or 6.</li>
+                <img src="{% static 'images/dices_3.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
+            </ul>
+        {{ else }}
+        <li>At the end of each round, the match may continue based on your choices and a 6-sided die roll. The match continues if the die shows 1, 2, or 3; ends if it shows 4, 5, or 6.</li>
+        <img src="{% static 'images/dices_3.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
+        {{ end if }}
+        <li> Matches are played in blocks of 3 rounds. At each block's end, you will learn if all matches have ended. If not, you will play another block. Once all matches end, you will see the round your match ended and the computer's die rolls for each round.  </li>
+
+        <li> After all matches are finished, you will be randomly paired with someone for a new match.  </li>
+    </ul>
+        </p>
+            </div>
+</div>
+
+
+<form id="decisionForm" method="post">
+    <input type="hidden" name="decision" id="decisionInput">
+</form>
+
+<style>
+    .payoff-num {
+        color: blue;
+        font-weight: bold;
+    }
+</style>
+
+<script>
+    let selectedOption = "";
+
+    function selectChoice(choice) {
+        selectedOption = choice;
+        document.getElementById("decisionInput").value = choice;
+
+        // Reset previous selections
+        document.getElementById('payoff_CC').style.backgroundColor = "";
+        document.getElementById('payoff_CD').style.backgroundColor = "";
+        document.getElementById('payoff_DC').style.backgroundColor = "";
+        document.getElementById('payoff_DD').style.backgroundColor = "";
+
+        if (choice === 'C') {
+            document.getElementById('payoff_CC').style.backgroundColor = "Lavender";
+            document.getElementById('payoff_CD').style.backgroundColor = "Lavender";
+            document.getElementById("selectedChoice").textContent = "You selected: 1";
+        } else {
+            document.getElementById('payoff_DC').style.backgroundColor = "Lavender";
+            document.getElementById('payoff_DD').style.backgroundColor = "Lavender";
+            document.getElementById("selectedChoice").textContent = "You selected: 2";
+        }
+
+        // Enable confirm button
+        document.getElementById("confirmButton").disabled = false;
+        document.getElementById("confirmButton").style.cursor = "pointer";
+        document.getElementById("confirmButton").style.backgroundColor = "#4CAF50";
+    }
+
+    function confirmChoice() {
+        if (selectedOption !== "") {
+            document.getElementById("decisionForm").submit();
+        }
+    }
+</script>
+
+{% endblock %}
