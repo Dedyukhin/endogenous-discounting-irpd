@@ -14,7 +14,7 @@
 
         <p style="font-size: 20px;"> The game has ended for all pairs</p>
 
-        <p style="font-size: 20px;"> Your match has terminated in <strong> round {{ round_terminated }} </strong> </p>
+        <p style="font-size: 20px;"> Your match was terminated in <strong> round {{ round_terminated }} </strong> </p>
 
         <div style="overflow-x: auto; margin-top: 10px;">
         <table style="width: 70%; border-collapse: collapse; text-align: center; margin: 0 auto;">
@@ -49,9 +49,9 @@
     </div>
 
     {{ else }}
-    <h3 style="color: #333;">The match has not ended for at least one pair</h3>
+    <h3 style="color: #333;">The match has not ended for at least one pair, which may or may not include you.</h3>
     <div style="margin-bottom: 20px;">
-        <p style="font-size: 18px;">You will play an additional block in the <strong> same pair </strong> </p>
+        <p style="font-size: 18px;">You will play an additional block (3 rounds) in the <strong> same pair </strong> </p>
     </div>
     {{ endif }}
 

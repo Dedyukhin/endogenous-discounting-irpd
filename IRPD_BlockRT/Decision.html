@@ -30,8 +30,8 @@
                             Choice 1
                         </button>
                     </td>
-                    <td id="payoff_CC" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffCC }}</span>, {{ C.PayoffCC }}</td>
-                    <td id="payoff_CD" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffCD }}</span>, {{ C.PayoffDC }}</td>
+                    <td id="payoff_CC" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffCC }}</span>,<span style="color: purple;">{{ Constants.PayoffCC }}</span></td>
+                    <td id="payoff_CD" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffCD }}</span>, <span style="color: purple;">{{ Constants.PayoffDC }}</span></td>
                 </tr>
                 <tr>
                     <td style="padding: 15px;">
@@ -39,8 +39,8 @@
                             Choice 2
                         </button>
                     </td>
-                    <td id="payoff_DC" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffDC }}</span>, {{ C.PayoffCD }}</td>
-                    <td id="payoff_DD" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffDD }}</span>, {{ C.PayoffDD }}</td>
+                    <td id="payoff_DC" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffDC }}</span>, <span style="color: purple;">{{ Constants.PayoffCD }}</span></td>
+                    <td id="payoff_DD" style="padding: 10px;"><span class="payoff-num">{{ C.PayoffDD }}</span>, <span style="color: purple;">{{ Constants.PayoffDD }}</span></td>
                 </tr>
             </tbody>
         </table>
@@ -104,6 +104,8 @@
         <li> Matches are played in blocks of 3 rounds. At each block's end, you will learn if all matches have ended. If not, you will play another block. Once all matches end, you will see the round your match ended and the computer's die rolls for each round.  </li>
 
         <li> After all matches are finished, you will be randomly paired with someone for a new match.  </li>
+
+        <li> One match will be randomly selected to count towards your final payoff. </li>
     </ul>
         </p>
             </div>

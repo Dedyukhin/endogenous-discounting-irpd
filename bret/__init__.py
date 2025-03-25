@@ -36,7 +36,7 @@ class C(BaseConstants):
     BOX_WIDTH = '50px'
 
     # number of rounds to be played
-    NUM_ROUNDS = 1
+    NUM_ROUNDS = 2
 
     # determines whether all rounds played are payed-off or whether one round is randomly chosen for payment
     # if <random_payoff = True>, one round is randomly determined for payment

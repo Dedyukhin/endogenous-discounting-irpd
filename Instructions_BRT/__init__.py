@@ -21,12 +21,12 @@ class Constants(BaseConstants):
          "choices": [str(OriginalConstants.PayoffCD), str(OriginalConstants.PayoffDD), str(OriginalConstants.PayoffCC), str(OriginalConstants.PayoffDC)],
          "correct": "12",
          "explanation": "In the payoff table, the top-right cell shows your payoff as the first entry"},
-        {"question": "4. If you have already played 2 rounds and you chose 2, while the person you are matched with chose 1, for which die values will the game continue?",
+        {"question": "4. You have already played 3 rounds and are now in round 4. In this round, you chose 2 and your opponent chose 1. Under which outcomes of the die roll does the game continue?",
          "choices": ["1,2,5,6", "1,2,3", "3,4,5,6", "1,2,3,4"],
          "correct": "1,2,3",
          "explanation": "To determine whether the match will continue for at least one more round, the computer will roll a six-sided die. If your choice in the previous round was 1 and the other person's choice was also 1, the match will continue for an additional round if the die lands on a 1, 2, 3, or 4. The match will end if the die lands on a 5 or 6. Otherwise, the match will continue for an additional round if the die lands on a 1, 2, or 3. The match will end if the die lands on a 4, 5, or 6."},
     ]
-    num_rounds = len(questions)
+    num_rounds = 1
 
     PayoffCC = OriginalConstants.PayoffCC
     PayoffCD = OriginalConstants.PayoffCD
@@ -47,68 +47,63 @@ class Group(BaseGroup):
     pass
 
 class Player(BasePlayer):
-    current_question = models.IntegerField(initial=10)  # Tracks the question index
-    answer = models.StringField()
     is_correct = models.BooleanField(initial=True)
+
+    quiz_q1 = models.BooleanField(
+        label="1. The first entry in each cell represents your payoff, while the second entry represents the payoff of the person you are matched with.",
+        choices=[
+            ("True", True),
+            ("False", False)],
+        widget=widgets.RadioSelect,
+        )
+    quiz_q2 = models.BooleanField(
+        label="2. You will be paid for all matches.",
+        choices=[
+            ("True", True),
+            ("False", False)],
+        widget=widgets.RadioSelect,
+    )
+    quiz_q3 = models.IntegerField(
+        label="3. If you choose 1 and the other person chooses 2, your payoff in this round will be:", min=0, max=100
+    )
+    quiz_q4 = models.StringField(
+        label="4. You have already played 3 rounds and are now in round 4. In this round, you chose 2 and your opponent chose 1. Under which outcomes of the die roll does the game continue?",
+        choices=[("1,2,5,6", "1,2,5,6"),
+                 ("1,2,3", "1,2,3"),
+                 ("3,4,5,6", "3,4,5,6"),
+                 ("1,2,3,4", "1,2,3,4")],
+        widget=widgets.RadioSelect,
+    )
 
 from . import *
 
-class Question(Page):
+class Quiz(Page):
     form_model = 'player'
-    form_fields = ['answer']
-
-    @staticmethod
-    def vars_for_template(player: Player):
-        if player.round_number == 1:
-            player.current_question = 0
-
-        question_data = Constants.questions[player.current_question]
-        return {
-            'question': question_data['question'][2:],
-            'number': question_data['question'][0],
-            'choices': question_data['choices'],
-        }
-
-    @staticmethod
-    def before_next_page(player: Player, timeout_happened):
-        question_data = Constants.questions[player.current_question]
-        player.is_correct = player.answer == question_data['correct']
+    form_fields = ['quiz_q1', 'quiz_q2','quiz_q3', 'quiz_q4']
 
     def error_message(player: Player, values):
-        # Get the current question's data
-        question_data = Constants.questions[player.current_question]
-        # Check if the submitted answer matches the correct answer.
-        if values['answer'] != question_data['correct']:
-            return "Your answer is incorrect. Please try again."
+        # Let's check correctness of Q1 and Q2
+        # If a question is answered incorrectly, return a string.
+        # That string will be displayed at the top of the page as an error,
+        # and oTree will not allow the participant to continue until they fix it.
 
-    def is_displayed(player: Player):
-        if player.round_number == 1:
-            return True
-        else:
-            return player.current_question < len(Constants.questions)
-
-class Explanation(Page):
-    @staticmethod
-    def vars_for_template(player: Player):
-        question_data = Constants.questions[player.current_question]
-
-        return {
-            'question': question_data['question'][2:],
-            'number': question_data['question'][0],
-            'answer': player.answer,
-            'is_correct': player.is_correct,
-            'correct_answer': question_data['correct'],
-            'explanation': question_data['explanation'],
+        correct_answers = {
+            'quiz_q1': True,
+            'quiz_q2': False,
+            'quiz_q3': OriginalConstants.PayoffCD,
+            'quiz_q4': "1,2,3"
         }
 
-    @staticmethod
-    def before_next_page(player: Player, timeout_happened):
-        if player.round_number < Constants.num_rounds:
-            player.in_round(player.round_number + 1).current_question = player.current_question + 1
+        # We can accumulate errors:
+        errors = []
+        if values != correct_answers:
+            return "You have at least one incorrect answer."
+            player.is_correct = False
 
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.current_question < len(Constants.questions)
+        if errors:
+            # Return a single string joined by line breaks (or however you like)
+            return " ".join(errors)
+        # If we return None or empty, the participant can proceed
 
 class Instructions_1(Page):
     def is_displayed(self):
@@ -150,4 +145,4 @@ class WaitForOthers(WaitPage):
         # Display only in the first round
         return self.round_number == Constants.num_rounds
 
-page_sequence = [Instructions_1, Instructions_2, Instructions_3, Question, Explanation, After_quiz, WaitForOthers]
+page_sequence = [Instructions_1, Instructions_2, Instructions_3, Quiz, After_quiz, WaitForOthers]

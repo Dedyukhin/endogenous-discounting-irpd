@@ -9,7 +9,7 @@
 
 {{ block content }}
 
-<div class="card card-info">
+<div style="font-size: 20px;" class="card card-info">
     You chose to collect {{ boxes_collected }} out of {{ C.NUM_BOXES }} boxes.
 
     <br/>
@@ -22,11 +22,13 @@
     {{ else }}
         Your collected boxes did not contain the bomb.<br/>
         Thus, you receive {{ box_value }} for each of the {{ boxes_collected }} boxes
-        you collected such that your payoff from this task amounts to <b>{{ payoff }}</b>.
+        you collected such that your payoff from this task amounts to <b>{{ payoff }}</b>
     {{ endif }}
 
     <br/>
-    This was the practice round. Next round is going to be paid.
+    <p style="font-size: larger; font-weight: bold;">
+        This was the practice round. Next round is going to be paid.
+    </p>
     <br/>
 
 {% next_button %}
