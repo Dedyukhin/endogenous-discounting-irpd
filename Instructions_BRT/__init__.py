@@ -81,6 +81,9 @@ class Quiz(Page):
     form_model = 'player'
     form_fields = ['quiz_q1', 'quiz_q2','quiz_q3', 'quiz_q4']
 
+    def vars_for_template(player: Player):
+        return dict(Endogenous = Constants.Treatment == "Endo")
+
     def error_message(player: Player, values):
         # Let's check correctness of Q1 and Q2
         # If a question is answered incorrectly, return a string.
@@ -97,8 +100,8 @@ class Quiz(Page):
         # We can accumulate errors:
         errors = []
         if values != correct_answers:
-            return "You have at least one incorrect answer."
             player.is_correct = False
+            return "You have at least one incorrect answer."
 
         if errors:
             # Return a single string joined by line breaks (or however you like)
@@ -134,8 +137,8 @@ class After_quiz(Page):
                     die_threshold=Constants.StopProbability,
                     die_threshold_plus_one=Constants.StopProbability + 1,
                     die_threshold_CC=Constants.StopProbabilityCC,
-                    die_threshold_CC_plus_one=Constants.StopProbabilityCC + 1)
-
+                    die_threshold_CC_plus_one=Constants.StopProbabilityCC + 1,
+                    Endogenous = Constants.Treatment == "Endo")
     def is_displayed(self):
         return self.round_number == Constants.num_rounds
 

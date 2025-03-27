@@ -12,8 +12,6 @@
     <h3 style="color: #333;">The match has ended</h3>
     <div style="margin-bottom: 20px;">
 
-        <p style="font-size: 20px;"> The game has ended for all pairs</p>
-
         <p style="font-size: 20px;"> Your match was terminated in <strong> round {{ round_terminated }} </strong> </p>
 
         <div style="overflow-x: auto; margin-top: 10px;">
@@ -45,11 +43,11 @@
 
         <p style="font-size: 20px;"><strong>Your total payoff for the match:</strong> {{ total_payoff }}</p>
 
-        <p style="font-size: 20px;"> Now you will be rematched </p>
+        <p style="font-size: 20px;"> Now you will be randomly rematched </p>
     </div>
 
     {{ else }}
-    <h3 style="color: #333;">The match has not ended for at least one pair, which may or may not include you.</h3>
+    <h4 style="color: #333;">The match has not ended for at least one pair, which may or may not include you.</h4>
     <div style="margin-bottom: 20px;">
         <p style="font-size: 18px;">You will play an additional block (3 rounds) in the <strong> same pair </strong> </p>
     </div>

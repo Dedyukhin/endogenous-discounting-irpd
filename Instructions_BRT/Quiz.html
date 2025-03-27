@@ -6,42 +6,87 @@
 {% endblock %}
 
 {% block content %}
-    <h3>Please complete the following quiz:</h3>
+    <h3>Please complete the following quiz. You can review the instructions below.</h3>
 
     {{ formfields }}
 
         <button type="submit" class="btn btn-primary">Next</button>
     </form>
 
-        <p> Payoffs for each combination of choices: </p>
+    <p>  </p>
 
-            <table class='table table-bordered text-center' style='width: auto; margin: auto'>
-                <tr>
-                    <th colspan=2 rowspan=2></th>
-                    <th colspan=2>The Other Participant</th>
-                </tr>
-                <tr>
-                    <th>Choice 1</th>
-                    <th>Choice 2</th>
-                </tr>
-                <tr>
-                    <th rowspan=2><span class="rotate90">You</span></th>
-                    <th>Choice 1</th>
-                    <td> <span style="color: dodgerblue;">{{ Constants.PayoffCC }}</span>, <span style="color: purple;">{{ Constants.PayoffCC }}</span></td>
-                    <td><span style="color: dodgerblue;">{{ Constants.PayoffCD }}</span>, <span style="color: purple;">{{ Constants.PayoffDC }}</span></td>
-                </tr>
-                <tr>
-                    <th>Choice 2</th>
-                    <td> <span style="color: dodgerblue;">{{ Constants.PayoffDC }}</span>, <span style="color: purple;">{{ Constants.PayoffCD }}</span></td>
-                    <td> <span style="color: dodgerblue;">{{ Constants.PayoffDD }}</span>, <span style="color: purple;">{{ Constants.PayoffDD }}</span></td>
-                </tr>
-            </table>
+    <div class="card card-body bg-light instructions">
+        <p class="big">
 
-            <p> Rule for determining if match continues: </p>
-            <ul>
-                <li> If your choice in the previous round was 1 and the other person's choice was also 1: </li>
-                <img src="{% static 'images/dices_4.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
-                <li> If at least one of you chose 2:</li>
-                <img src="{% static 'images/dices_3.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
-            </ul>
+        <p> In this experiment, you will be asked to make decisions in several rounds. You will be randomly paired with another person for a sequence of rounds. Each sequence of rounds is referred to as a match, and you will interact with the same person for that entire match. After each match concludes, a new match will begin, and you will again be randomly paired with another participant.</p>
+
+        <p> The points you can obtain in each round of a match depend on your choice and the choice of the person you are paired with. Each round you and the other person will choose a number (1 or 2) by selecting the corresponding button on the screen. The table below represents all the possible outcomes:</p>
+
+        <table class='table table-bordered text-center' style='width: auto; margin: auto'>
+            <tr>
+                <th colspan=2 rowspan=2></th>
+                <th colspan=2>The Other Participant</th>
+            </tr>
+            <tr>
+                <th>Choice 1</th>
+                <th>Choice 2</th>
+            </tr>
+            <tr>
+                <th rowspan=2><span class="rotate90">You</span></th>
+                <th>Choice 1</th>
+                <td> <span style="color: dodgerblue;">{{ Constants.PayoffCC }}</span>, <span style="color: purple;">{{ Constants.PayoffCC }}</span></td>
+                <td><span style="color: dodgerblue;">{{ Constants.PayoffCD }}</span>, <span style="color: purple;">{{ Constants.PayoffDC }}</span></td>
+            </tr>
+            <tr>
+                <th>Choice 2</th>
+                <td> <span style="color: dodgerblue;">{{ Constants.PayoffDC }}</span>, <span style="color: purple;">{{ Constants.PayoffCD }}</span></td>
+                <td> <span style="color: dodgerblue;">{{ Constants.PayoffDD }}</span>, <span style="color: purple;">{{ Constants.PayoffDD }}</span></td>
+            </tr>
+        </table>
+
+        <p> The table shows the points associated with each combination of your choice and the choice of the person you are paired with.
+            <span style="color: dodgerblue;"> The first entry in each cell represents the points you obtain for that round</span>,
+            while <span style="color: purple;"> the second entry represents the points obtained by the person you are paired with</span>.</p>
+
+        <p> That is, in each round of a match, if: </p>
+        <ul>
+            <li> (1,1): Your choice is <span style="color: dodgerblue;"> 1 </span> and the other’s choice is <span style="color: purple;"> 1 </span>. You earn <span style="color: dodgerblue;">{{ Constants.PayoffCC }}</span>, and the other person earns <span style="color: purple;">{{ Constants.PayoffCC }}</span>.</li>
+            <li> (1,2): Your choice is <span style="color: dodgerblue;"> 1 </span> and the other’s choice is <span style="color: purple;"> 2 </span>. You earn <span style="color: dodgerblue;">{{ Constants.PayoffCD }}</span>, and the other person earns <span style="color: purple;">{{ Constants.PayoffDC }}</span>.</li>
+            <li> (2,1): Your choice is <span style="color: dodgerblue;"> 2 </span> and the other’s choice is <span style="color: purple;"> 1 </span>. You earn <span style="color: dodgerblue;">{{ Constants.PayoffDC }}</span>, and the other person earns <span style="color: purple;">{{ Constants.PayoffCD }}</span>.</li>
+            <li> (2,2): Your choice is <span style="color: dodgerblue;"> 2 </span> and the other’s choice is <span style="color: purple;"> 2 </span>. You earn <span style="color: dodgerblue;">{{ Constants.PayoffDD }}</span>, and the other person earns <span style="color: purple;">{{ Constants.PayoffDD }}</span>.</li>
+        </ul>
+
+        <p> After each round, you will be reminded of your choice, and you will be shown the choice of the person you were paired with and all choices during previous periods for a given match. </p>
+
+        {{ if Endogenous }}
+        <p> At the end of each round, there is a probability that the match will continue for at least another round. The probability will depend on your choice and the choice of the person you are paired with. The computer will roll a 6-sided die in every round to decide whether the match will continue for at least another round: </p>
+        <ul>
+            <li> <strong> If your choice in the previous round was 1 and the other person's choice was also 1</strong>, the match will continue for an additional round if the die lands on a 1, 2, 3, or 4. The match will end if the die lands on a 5 or 6. </li>
+            <img src="{% static 'images/dices_4.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
+            <li> <strong>  If at least one of you chose 2</strong>, the match will continue for an additional round if the die lands on a 1, 2, or 3. The match will end if the die lands on a 4, 5, or 6.</li>
+            <img src="{% static 'images/dices_3.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
+        </ul>
+
+        <p> However, you will play every match in blocks of 3 rounds. At the end of each block, you will learn if the match ended for <i>all</i> pairs in the room in the previous block of 3 rounds or not. If it has not, you will play another block of 3 rounds. If all matches have ended in this block, you will see in which round your match had actually ended. In particular, you will be informed of the die rolls generated by the computer for each round at the end of every 3 rounds. The final round of the match will be the first round in which the die lands on </p>
+        <ul>
+            <li> 5 or 6, if your choice in the previous round was 1 and the other person's choice was also 1; </li>
+            <li> 4, 5, or 6, if at least one of you chose 2. </li>
+        </ul>
+
+        {{ else }}
+        <p> At the end of each round, there is a probability that the match will continue for at least another round. The computer will roll a 6-sided die in every round to decide whether the match will continue for at least another round. The match will continue for an additional round if the die lands on a 1, 2, or 3. The match will end if the die lands on a 4, 5, or 6. </p>
+            <img src="{% static 'images/dices_3.png' %}" style="max-width: 60%; height: auto; display: block; margin: auto;">
+
+        <p> However, you will play every match in blocks of 3 rounds. At the end of each block, you will learn if the match ended for all pairs in the room in the previous block of 3 rounds or not. If it has not, you will play another block of 3 rounds. If all matches have ended in this block, you will see in which round your match had actually ended. In particular, you will be informed of the die rolls generated by the computer for each round at the end of every 3 rounds. The final round of the match will be the first round in which the die lands on 4, 5, or 6.</p>
+        {{ endif }}
+
+        <p>Remember, if you are in round 2, the probability that it is the last round is the same as it would be if you were in round 9.</p>
+
+        <p> Once a match ends, you will be randomly paired with someone for a new match. You will not be able to identify who you have interacted with in previous or future matches. </p>
+
+        <p> Each part of the experiment will generate points that count towards your final payoff. In this part, one match will be randomly selected to count towards your final payoff. </p>
+
+        <p> Points earned in this match will be converted to dollars at a rate of 15 cents per point or <strong>3 dollars per 20 points</strong>. You will receive an additional $5 show-up fee for your participation. You will only be informed of your payoffs at the end of the experiment. </p>
+
+        </div>
 {% endblock %}

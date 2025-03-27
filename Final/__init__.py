@@ -47,7 +47,10 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect,
     )
     comments = models.LongStringField(
-        blank=True, label="Please feel free to provie reasoning of your choices in the experiment"
+        blank=True, label="Please feel free to provide reasoning of your choices in the experiment"
+    )
+    exp_comments = models.LongStringField(
+        blank=True, label="Please feel free to provide comments regarding this experiment"
     )
 
 
@@ -68,7 +71,7 @@ class ResultsWaitPage(WaitPage):
 
 class Demographics(Page):
     form_model = "player"
-    form_fields = ["age", "gender", "STEM", "Economics", "comments"]
+    form_fields = ["age", "gender", "STEM", "Economics", "comments", "exp_comments"]
         # age, gender, STEM major, Economic, Reasoning your actions
 
 page_sequence = [Demographics, MyPage]
