@@ -101,6 +101,9 @@ class Decision(Page):
     Page where players choose their decision (cooperate or defect) and may leave comments.
     Also displays the history of previous decisions within the current match.
     """
+    def is_displayed(player: Player):
+        return player.alive
+    
     form_model = 'player'
     form_fields = ['decision', 'comments']
 
@@ -180,6 +183,7 @@ class EndRound(Page):
     Page displayed at the end of each round showing results.
     It includes the choices made, the payoff for the round, and displays dice images.
     """
+    
     @staticmethod
     def vars_for_template(player: Player):
         other_player = player.get_others_in_group()[0]
@@ -207,6 +211,10 @@ class Wait(WaitPage):
     """
     Simple wait page that synchronizes all groups.
     """
+    def is_displayed(player: Player):
+        # Display this page only if the player is still active.
+        return player.alive
+    
     def after_all_players_arrive(group: Group):
         for player in group.get_players():
             # Propagate current match data to the next round if the game is still ongoing.
@@ -229,6 +237,10 @@ class Wait(WaitPage):
 
 class WaitForAll(WaitPage):
     wait_for_all_groups = True
+
+    def is_displayed(player: Player):
+        # Display this page only if the player is still active.
+        return player.alive
 
 class EndBlock(Page):
     """
@@ -307,6 +319,10 @@ class RematchingWaitPage(WaitPage):
     It checks for the end of the session based on rounds or time limits and then regroups players.
     """
     wait_for_all_groups = True
+
+    def is_displayed(player: Player):
+        # Display this page only if the player is still active.
+        return player.alive
 
     def after_all_players_arrive(subsession: Subsession):
         # Calculate elapsed session time.
