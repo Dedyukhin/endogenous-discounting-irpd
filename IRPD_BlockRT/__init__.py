@@ -42,7 +42,7 @@ class C(BaseConstants):
 
     # Time limit configuration for the session
     time_limit = True
-    time_limit_seconds = 30 * 60  # e.g., 60 seconds for the session if enabled
+    time_limit_seconds = 1 * 60  # e.g., 60 seconds for the session if enabled
 
     # Total number of rounds in the experiment (blocks x rounds per block)
     NUM_ROUNDS = num_blocks * block_length
