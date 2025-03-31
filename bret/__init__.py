@@ -246,4 +246,4 @@ class PracticeRound(Page):
 class Wait(WaitPage):
     Wait_for_all_groups = True
 
-page_sequence = [Instructions, Wait, Game, PracticeRound, Results]
+page_sequence = [Wait, Instructions, Wait, Game, PracticeRound, Results]
