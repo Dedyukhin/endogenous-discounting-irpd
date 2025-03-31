@@ -41,8 +41,8 @@ class C(BaseConstants):
     dice_realizations = [int(x) for x in gameFile.readline().split()]
 
     # Time limit configuration for the session
-    time_limit = False
-    time_limit_seconds = 1 * 60  # e.g., 60 seconds for the session if enabled
+    time_limit = True
+    time_limit_seconds = 30 * 60  # e.g., 60 seconds for the session if enabled
 
     # Total number of rounds in the experiment (blocks x rounds per block)
     NUM_ROUNDS = num_blocks * block_length
@@ -137,6 +137,8 @@ class ResultsWaitPage(WaitPage):
     Wait page that processes players' decisions once both have submitted.
     Calculates payoffs and updates game state based on the players' choices.
     """
+    def is_displayed(player: Player):
+        return player.alive
 
     def after_all_players_arrive(group: Group):
         # Retrieve both players from the group.
@@ -235,7 +237,7 @@ class EndBlock(Page):
     """
     def is_displayed(player: Player):
         # Only display this page at the end of each block.
-        return player.subsession.round_number % C.block_length == 0
+        return (player.subsession.round_number % C.block_length == 0) and player.alive
 
     def vars_for_template(player: Player):
         history = []
@@ -310,9 +312,13 @@ class RematchingWaitPage(WaitPage):
         # Calculate elapsed session time.
         elapsed_time = time.time() - subsession.session.vars['start_time']
         # Mark players as inactive if session is over or time limit exceeded.
-        for player in subsession.get_players():
-            if player.round_number == C.NUM_ROUNDS or (C.time_limit == True and elapsed_time > C.time_limit_seconds):
-                player.alive = False
+        if all(p.terminated for p in subsession.get_players()) and (C.time_limit and elapsed_time > C.time_limit_seconds):
+            for player in subsession.get_players():
+                if player.terminated and (subsession.round_number % C.block_length == 0):
+                    # Do not show any of remaining pages
+                    for round_number in range(1, C.NUM_ROUNDS + 1):
+                        player_in_round = player.in_round(round_number)
+                        player_in_round.alive = False
 
         # If at the end of a block and all players are terminated, regroup for the next round.
         if (subsession.round_number % C.block_length == 0) and (all(player.terminated for player in subsession.get_players())):
@@ -346,8 +352,8 @@ class End(Page):
         }
 
     # Optionally, specify the next app after this page by uncommenting below.
-    # def app_after_this_page(player, upcoming_apps):
-    #     return 'bret'
+    def app_after_this_page(player: Player, upcoming_apps):
+        return 'bret'
 
 
 # ****************************************************************

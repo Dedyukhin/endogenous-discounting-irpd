@@ -53,15 +53,18 @@ class Player(BasePlayer):
         blank=True, label="Please feel free to provide comments regarding this experiment"
     )
 
-
+import math
 # PAGES
 class MyPage(Page):
-    def vars_for_template(player):
+    def vars_for_template(player: Player):
+        # amount = float(player.participant.payoff.to_real_world_currency(player.session))
+        # player.participant.payoff = cu((math.ceil(amount * 4) / 4) / player.session.config['real_world_currency_per_point'])
         return {
             'payment_for_game': player.participant.game_payment.to_real_world_currency(player.session),
             'choosen_match': player.participant.payment_match,
             'risk_payment': player.participant.bret_payoff.to_real_world_currency(player.session),
-            'EXPERIMENT_PAYMENT': player.participant.payoff_plus_participation_fee().to_real_world_currency(player.session)
+            'EXPERIMENT_PAYMENT': player.participant.payoff.to_real_world_currency(player.session),
+            'amount': player.participant.payoff
         }
 
 
