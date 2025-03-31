@@ -350,15 +350,8 @@ class End(Page):
             'payment': player.participant.payoff,
             'choosen_match': player.participant.payment_match,
         }
-
+    
     # Optionally, specify the next app after this page by uncommenting below.
-
-class Wait_End(WaitPage):
-    Wait_for_all_groups = True
-
-    def is_displayed(player: Player):
-        return player.alive == False
-
     def app_after_this_page(player: Player, upcoming_apps):
         return 'bret'
 
