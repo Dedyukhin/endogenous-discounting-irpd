@@ -3,7 +3,7 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name = 'WCDC',
-        app_sequence = ["Instructions_BRT", "IRPD_BlockRT", "bret", "Final"],  ##
+        app_sequence = ["IRPD_BlockRT", "bret", "Final"],  ##
         num_demo_participants = 2,
         display_name = 'When Cooperation Drives Continuation',
     ),
