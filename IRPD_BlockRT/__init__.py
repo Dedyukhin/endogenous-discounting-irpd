@@ -10,6 +10,7 @@ The game reads configuration parameters (such as payoffs, treatment type,
 stop probabilities, block settings, and dice realizations) from a file.
 """
 
+
 # ****************************************************************
 # CONSTANTS AND GAME SETTINGS
 # ****************************************************************
@@ -42,7 +43,7 @@ class C(BaseConstants):
 
     # Time limit configuration for the session
     time_limit = True
-    time_limit_seconds = 1 * 60  # e.g., 60 seconds for the session if enabled
+    time_limit_seconds = 30 * 60  # e.g., 60 seconds for the session if enabled
 
     # Total number of rounds in the experiment (blocks x rounds per block)
     NUM_ROUNDS = num_blocks * block_length
@@ -70,12 +71,12 @@ class Player(BasePlayer):
 
     # Game control flags and counters.
     terminated = models.BooleanField(initial=False)  # Flag to mark if current block/match ended.
-    alive = models.BooleanField(initial=True)          # Flag indicating if player is active in the session.
-    round = models.IntegerField(initial=1)               # Custom counter for round within a match.
-    game_length = models.IntegerField(initial=0)         # Counter for rounds played in the current match.
-    match = models.IntegerField(initial=1)               # Counter for the current match number.
-    block = models.IntegerField(initial=1)               # Counter for the current block.
-    potential_payoff = models.CurrencyField(initial=0)   # Accumulated payoff for the current match.
+    alive = models.BooleanField(initial=True)  # Flag indicating if player is active in the session.
+    round = models.IntegerField(initial=1)  # Custom counter for round within a match.
+    game_length = models.IntegerField(initial=0)  # Counter for rounds played in the current match.
+    match = models.IntegerField(initial=1)  # Counter for the current match number.
+    block = models.IntegerField(initial=1)  # Counter for the current block.
+    potential_payoff = models.CurrencyField(initial=0)  # Accumulated payoff for the current match.
 
     def other_player(self):
         """
@@ -101,9 +102,10 @@ class Decision(Page):
     Page where players choose their decision (cooperate or defect) and may leave comments.
     Also displays the history of previous decisions within the current match.
     """
+
     def is_displayed(player: Player):
         return player.alive
-    
+
     form_model = 'player'
     form_fields = ['decision', 'comments']
 
@@ -140,6 +142,7 @@ class ResultsWaitPage(WaitPage):
     Wait page that processes players' decisions once both have submitted.
     Calculates payoffs and updates game state based on the players' choices.
     """
+
     def is_displayed(player: Player):
         return player.alive
 
@@ -183,7 +186,7 @@ class EndRound(Page):
     Page displayed at the end of each round showing results.
     It includes the choices made, the payoff for the round, and displays dice images.
     """
-    
+
     @staticmethod
     def vars_for_template(player: Player):
         other_player = player.get_others_in_group()[0]
@@ -207,14 +210,16 @@ class EndRound(Page):
         if player.group.dice > player.group.probability:
             player.terminated = True
 
+
 class Wait(WaitPage):
     """
     Simple wait page that synchronizes all groups.
     """
+
     def is_displayed(player: Player):
         # Display this page only if the player is still active.
         return player.alive
-    
+
     def after_all_players_arrive(group: Group):
         for player in group.get_players():
             # Propagate current match data to the next round if the game is still ongoing.
@@ -235,6 +240,7 @@ class Wait(WaitPage):
                 if player.terminated:
                     next_round_player.terminated = True
 
+
 class WaitForAll(WaitPage):
     wait_for_all_groups = True
 
@@ -242,11 +248,13 @@ class WaitForAll(WaitPage):
         # Display this page only if the player is still active.
         return player.alive
 
+
 class EndBlock(Page):
     """
     Page displayed at the end of a block (after a fixed number of rounds).
     It shows block-specific results including dice outcomes and match summary.
     """
+
     def is_displayed(player: Player):
         # Only display this page at the end of each block.
         return (player.subsession.round_number % C.block_length == 0) and player.alive
@@ -257,12 +265,12 @@ class EndBlock(Page):
         # Get the dice image for the starting round of the block.
         im = 'images/dice-six-faces-' + str(player.in_round(start).group.dice) + ".png"
         history = [{
-                        'round': player.in_round(start).round,
-                        # "1" represents cooperation ('C') and "2" represents defection ('D')
-                        'my_choice': "1" if player.in_round(start).decision == "C" else "2",
-                        'other_choice': "1" if player.in_round(start).other_player().decision == "C" else "2",
-                        'die': im
-                    }]
+            'round': player.in_round(start).round,
+            # "1" represents cooperation ('C') and "2" represents defection ('D')
+            'my_choice': "1" if player.in_round(start).decision == "C" else "2",
+            'other_choice': "1" if player.in_round(start).other_player().decision == "C" else "2",
+            'die': im
+        }]
         # For each round in the block (except the first), append dice images if the round was not terminated.
         for r in range(player.round_number - player.block * C.block_length + 1, player.round_number):
             if not player.in_round(r).terminated:
@@ -293,11 +301,13 @@ class EndBlock(Page):
                 next_round_player.potential_payoff = 0
                 next_round_player.terminated = False
 
+
 class EndMatch(Page):
     """
     Page displayed at the end of a match (block boundary when all players are terminated).
     It shows the total payoff for the match.
     """
+
     def is_displayed(player: Player):
         return (player.subsession.round_number % C.block_length == 0 and
                 all(player.terminated for player in player.subsession.get_players()) and
@@ -328,7 +338,8 @@ class RematchingWaitPage(WaitPage):
         # Calculate elapsed session time.
         elapsed_time = time.time() - subsession.session.vars['start_time']
         # Mark players as inactive if session is over or time limit exceeded.
-        if all(p.terminated for p in subsession.get_players()) and (C.time_limit and elapsed_time > C.time_limit_seconds):
+        if (all(p.terminated for p in subsession.get_players()) and
+                (subsession.round_number == C.NUM_ROUNDS or (C.time_limit and elapsed_time > C.time_limit_seconds))):
             for player in subsession.get_players():
                 if player.terminated and (subsession.round_number % C.block_length == 0):
                     # Do not show any of remaining pages
@@ -337,7 +348,8 @@ class RematchingWaitPage(WaitPage):
                         player_in_round.alive = False
 
         # If at the end of a block and all players are terminated, regroup for the next round.
-        if (subsession.round_number % C.block_length == 0) and (all(player.terminated for player in subsession.get_players())):
+        if (subsession.round_number % C.block_length == 0) and (
+        all(player.terminated for player in subsession.get_players())):
             if subsession.round_number < C.NUM_ROUNDS:
                 next_round = subsession.in_round(subsession.round_number + 1)
                 next_round.group_randomly()
@@ -345,11 +357,13 @@ class RematchingWaitPage(WaitPage):
             next_round = subsession.in_round(subsession.round_number + 1)
             next_round.group_like_round(subsession.round_number)
 
+
 class End(Page):
     """
     Final page displayed when the session ends (player is no longer active).
     Calculates the final payment based on a randomly selected match.
     """
+
     def is_displayed(player: Player):
         return player.alive == False
 
@@ -366,10 +380,11 @@ class End(Page):
             'payment': player.participant.payoff,
             'choosen_match': player.participant.payment_match,
         }
-    
+
     # Optionally, specify the next app after this page by uncommenting below.
     def app_after_this_page(player: Player, upcoming_apps):
         return 'bret'
+
 
 # ****************************************************************
 # PAGE SEQUENCE
