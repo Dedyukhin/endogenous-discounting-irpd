@@ -209,7 +209,7 @@ class Results(Page):
         if player.round_number == C.NUM_ROUNDS:
             total_payoff = player.payoff
             player.participant.bret_payoff = total_payoff
-            player.participant.payoff += player.participant.bret_payoff
+            # player.participant.payoff += player.participant.bret_payoff #This is double payment
         return dict(
             player_in_all_rounds=player.in_all_rounds(),
             box_value=C.BOX_VALUE,
@@ -247,3 +247,4 @@ class Wait(WaitPage):
     Wait_for_all_groups = True
 
 page_sequence = [Wait, Instructions, Wait, Game, PracticeRound, Results]
+
